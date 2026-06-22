@@ -5,12 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>急救箱每週檢查表 | First Aid Box Weekly Checklist</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
-        /* 強制防斷頁：確保表格行與照片不會在 A4 打印時被攔腰切斷 */
-        .page-break-avoid { page-break-inside: avoid !important; break-inside: avoid !important; }
+        
+        /* 🖨️ 核心打印格式優化：專門應對導出 PDF / 打印紙本 */
+        @media print {
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            /* 隱藏所有不需要出現在 PDF 上的按鈕與相機功能按鈕 */
+            [data-html2canvas-ignore="true"], .no-print {
+                display: none !important;
+            }
+            /* 移除陰影與外殼邊框，讓主體完美貼合 A4 紙張寬度 */
+            #checklist-container {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                max-w: 100% !important;
+                width: 100% !important;
+            }
+            /* 確保下拉選單在打印成 PDF 時，能完整顯示選中的文字（防止部分瀏覽器將其裁剪） */
+            select {
+                appearance: none !important;
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                border: 1px solid #cccccc !important;
+                background-image: none !important;
+            }
+            /* 防斷頁：防止表格行或圖片被截成兩半 */
+            .page-break-avoid {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen p-4 sm:p-8">
@@ -119,16 +151,14 @@
             <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="previewPhoto(event)">
             
             <div class="flex flex-col items-center justify-center">
-                <button type="button" onclick="document.getElementById('camera-input').click()" data-html2canvas-ignore="true"
-                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3 px-6 rounded-xl transition mb-4 flex items-center space-x-2 shadow-md">
+                <button type="button" onclick="document.getElementById('camera-input').click()" class="no-print bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3 px-6 rounded-xl transition mb-4 flex items-center space-x-2 shadow-md">
                     <span>📷</span>
                     <span>Take Photo / 啟動相機拍照</span>
                 </button>
 
                 <div id="photo-preview-container" class="hidden w-full max-w-sm border-2 border-gray-300 rounded-xl overflow-hidden bg-white relative mt-1 shadow-lg">
                     <img id="photo-preview" src="#" alt="First Aid Box Condition" class="w-full h-auto object-cover max-h-80">
-                    <button type="button" onclick="removePhoto()" data-html2canvas-ignore="true"
-                            class="absolute top-3 right-3 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow">
+                    <button type="button" onclick="removePhoto()" class="no-print absolute top-3 right-3 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow">
                         REMOVE / 刪除
                     </button>
                 </div>
@@ -136,7 +166,7 @@
             </div>
         </div>
 
-        <div class="mt-8 flex gap-5" data-html2canvas-ignore="true">
+        <div class="mt-8 flex gap-5 no-print">
             <button onclick="exportToPDF()" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-base py-3.5 px-5 rounded-xl transition duration-200 shadow-md flex items-center justify-center space-x-2">
                 <span>📁</span>
                 <span>Export PDF / 匯出報告</span>
@@ -149,7 +179,6 @@
     </div>
 
     <script>
-        // 核心檢查項目清單
         const checklistItems = [
             { id: 'booklet', en: '"Hints on First Aid" Booklet', zh: '「急救指南」小冊子 (正本/副本)', qtyUnder50: '1 pc', qtyOver50: '1 pc' },
             { id: 'dress_s', en: 'Sterile Dressings (Small)', zh: '消毒不含藥敷料：細碼 (手指用)', qtyUnder50: '12 pcs', qtyOver50: '12 pcs' },
@@ -166,7 +195,6 @@
             { id: 'aider_notice', en: 'Notice of First-Aider Name List', zh: '貼有指定負責合格急救員姓名告示', qtyUnder50: 'Required', qtyOver50: 'Required' }
         ];
 
-        // 動態渲染表格與數據 (放大版樣式與全數修復)
         function renderTable(tier) {
             const tbody = document.getElementById('items-table-body');
             tbody.innerHTML = '';
@@ -190,7 +218,6 @@
                 tbody.appendChild(tr);
             });
 
-            // 處理法規高亮框
             const warningBox = document.getElementById('stretcher-warning');
             if (tier === 'over50') {
                 warningBox.classList.remove('hidden');
@@ -199,7 +226,6 @@
             }
         }
 
-        // 相片處理函數
         function previewPhoto(event) {
             const input = event.target;
             if (input.files && input.files[0]) {
@@ -232,31 +258,12 @@
             renderTable('over50');
         }
 
-        // PDF 穩定匯出核心邏輯
+        // 🚀 高相容性原生調用方案
         function exportToPDF() {
-            const element = document.getElementById('checklist-container');
-            const project = document.getElementById('project-select').value || "Unknown_Project";
-            const cleanProjectName = project.replace(/[^a-zA-Z0-9]/g, "_");
-            const timestamp = new Date().toISOString().slice(0, 10);
-            
-            const opt = {
-                margin: [8, 8, 8, 8],
-                filename: `急救箱每週檢查表_${cleanProjectName}_${timestamp}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2, 
-                    useCORS: true, 
-                    logging: false,
-                    backgroundColor: '#ffffff',
-                    windowWidth: 850 // 固定適合放大版表格的虛擬視窗寬度，100% 避免邊緣遭切
-                },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
-            html2pdf().set(opt).from(element).save();
+            // 直接調用系統打印引擎，前線人員可選「另存為 PDF」或直接出紙本，完美防裁剪
+            window.print();
         }
 
-        // 頁面加載時初始渲染
         window.onload = () => { renderTable('over50'); };
     </script>
 </body>
