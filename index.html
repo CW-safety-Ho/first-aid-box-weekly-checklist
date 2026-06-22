@@ -9,7 +9,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
         
-        /* 🖨️ 核心打印格式優化：專門應對導出 PDF / 打印紙本 */
+        /* 🖨️ 打印及另存 PDF 專用樣式優化 */
         @media print {
             body {
                 background: #ffffff !important;
@@ -17,27 +17,28 @@
                 padding: 0 !important;
                 margin: 0 !important;
             }
-            /* 隱藏所有不需要出現在 PDF 上的按鈕與相機功能按鈕 */
+            /* 隱藏非打印按鈕 */
             [data-html2canvas-ignore="true"], .no-print {
                 display: none !important;
             }
-            /* 移除陰影與外殼邊框，讓主體完美貼合 A4 紙張寬度 */
+            /* 去除外殼陰影與邊框，完美適配 A4 寬度 */
             #checklist-container {
                 border: none !important;
                 box-shadow: none !important;
                 padding: 0 !important;
-                max-w: 100% !important;
+                max-width: 100% !important;
                 width: 100% !important;
             }
-            /* 確保下拉選單在打印成 PDF 時，能完整顯示選中的文字（防止部分瀏覽器將其裁剪） */
-            select {
+            /* 修正下拉選單與時間欄位在打印時的樣式 */
+            select, input[type="datetime-local"] {
                 appearance: none !important;
                 -webkit-appearance: none !important;
                 -moz-appearance: none !important;
                 border: 1px solid #cccccc !important;
+                background: transparent !important;
                 background-image: none !important;
             }
-            /* 防斷頁：防止表格行或圖片被截成兩半 */
+            /* 強制防斷頁 */
             .page-break-avoid {
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
@@ -55,8 +56,8 @@
             <p class="text-sm font-semibold text-gray-500 mt-1.5 uppercase tracking-wider">First Aid Box Weekly Checklist</p>
         </div>
 
-        <div class="space-y-5 mb-8 page-break-avoid">
-            <div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8 page-break-avoid">
+            <div class="md:col-span-2">
                 <label class="block text-sm font-bold text-gray-800 uppercase tracking-wide mb-2">
                     Project Select / 選擇地盤項目
                 </label>
@@ -105,12 +106,20 @@
 
             <div>
                 <label class="block text-sm font-bold text-gray-800 uppercase tracking-wide mb-2">
-                    Workforce Size / 地盤工人總數 (Cap. 59I)
+                    Workforce Size / 地盤工人總數
                 </label>
                 <select id="workforce-select" onchange="updateQuantities()" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-base text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
                     <option value="under50">Fewer than 50 workers / 少於 50 人</option>
                     <option value="over50" selected>50 or more workers / 50 人或以上</option>
                 </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-gray-800 uppercase tracking-wide mb-2">
+                    Inspection Date & Time / 檢查日期及時間
+                </label>
+                <input type="datetime-local" id="inspection-date" required
+                       class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-base text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
             </div>
         </div>
 
@@ -148,7 +157,7 @@
                 <span>📸</span> Photo Record / 現場拍照紀錄
             </h3>
             
-            <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="previewPhoto(event)">
+            <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="processAndCompressPhoto(event)">
             
             <div class="flex flex-col items-center justify-center">
                 <button type="button" onclick="document.getElementById('camera-input').click()" class="no-print bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3 px-6 rounded-xl transition mb-4 flex items-center space-x-2 shadow-md">
@@ -163,6 +172,7 @@
                     </button>
                 </div>
                 <p id="photo-placeholder-text" class="text-sm text-gray-400 italic mt-1 font-medium">No photo attached. Take a photo before exporting.</p>
+                <p id="compression-status" class="text-xs text-emerald-600 font-bold mt-2 hidden">✓ Photo compressed successfully for smaller file size! / 相片已成功壓縮降容！</p>
             </div>
         </div>
 
@@ -195,6 +205,15 @@
             { id: 'aider_notice', en: 'Notice of First-Aider Name List', zh: '貼有指定負責合格急救員姓名告示', qtyUnder50: 'Required', qtyOver50: 'Required' }
         ];
 
+        // 設定目前時間到 Input 欄位
+        function setDefaultDateTime() {
+            const now = new Date();
+            // 轉化為本地時區符合 datetime-local 的 ISO 格式 (YYYY-MM-DDTHH:MM)
+            const offset = now.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+            document.getElementById('inspection-date').value = localISOTime;
+        }
+
         function renderTable(tier) {
             const tbody = document.getElementById('items-table-body');
             tbody.innerHTML = '';
@@ -226,16 +245,46 @@
             }
         }
 
-        function previewPhoto(event) {
+        // 🚀 核心優化：相片背景壓縮引擎 (大幅降低 PDF/網頁體積)
+        function processAndCompressPhoto(event) {
             const input = event.target;
             if (input.files && input.files[0]) {
+                const file = input.files[0];
                 const reader = new FileReader();
+                
                 reader.onload = function(e) {
-                    document.getElementById('photo-preview').src = e.target.result;
-                    document.getElementById('photo-preview-container').classList.remove('hidden');
-                    document.getElementById('photo-placeholder-text').classList.add('hidden');
+                    const img = new Image();
+                    img.onload = function() {
+                        // 建立虛擬 Canvas 進行縮放與壓縮
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        // 限制相片最大寬度為 800 像素，平衡清晰度與檔案體積
+                        const MAX_WIDTH = 800;
+                        if (width > MAX_WIDTH) {
+                            height = Math.round((height * MAX_WIDTH) / width);
+                            width = MAX_WIDTH;
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // 核心：壓縮為 JPEG 格式，品質設定為 0.7 (70% 壓縮率)
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                        
+                        // 渲染到前端預覽
+                        document.getElementById('photo-preview').src = compressedDataUrl;
+                        document.getElementById('photo-preview-container').classList.remove('hidden');
+                        document.getElementById('photo-placeholder-text').classList.add('hidden');
+                        document.getElementById('compression-status').classList.remove('hidden');
+                    };
+                    img.src = e.target.result;
                 };
-                reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(file);
             }
         }
 
@@ -244,6 +293,7 @@
             document.getElementById('photo-preview').src = "#";
             document.getElementById('photo-preview-container').classList.add('hidden');
             document.getElementById('photo-placeholder-text').classList.remove('hidden');
+            document.getElementById('compression-status').classList.add('hidden');
         }
 
         function updateQuantities() {
@@ -254,17 +304,20 @@
         function resetForm() {
             document.getElementById('project-select').selectedIndex = 0;
             document.getElementById('workforce-select').value = 'over50';
+            setDefaultDateTime();
             removePhoto();
             renderTable('over50');
         }
 
-        // 🚀 高相容性原生調用方案
+        // 高相容性、零裁切原生調用
         function exportToPDF() {
-            // 直接調用系統打印引擎，前線人員可選「另存為 PDF」或直接出紙本，完美防裁剪
             window.print();
         }
 
-        window.onload = () => { renderTable('over50'); };
+        window.onload = () => { 
+            renderTable('over50'); 
+            setDefaultDateTime();
+        };
     </script>
 </body>
 </html>
