@@ -8,28 +8,49 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        /* 確保打印時不會發生奇怪的斷頁 */
-        .avoid-break { page-break-inside: avoid; break-inside: avoid; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+        
+        /* 核心打印及防斷頁優化 */
+        .pdf-avoid-break { page-break-inside: avoid !important; break-inside: avoid !important; }
+        
+        /* 自定義 Checkbox 樣式 */
+        .custom-checkbox {
+            width: 1.25rem;
+            height: 1.25rem;
+            appearance: none;
+            background-color: #374151;
+            border: 1px solid #4b5563;
+            border-radius: 0.25rem;
+            display: inline-grid;
+            place-content: center;
+            cursor: pointer;
+        }
+        .custom-checkbox:checked { background-color: #2563eb; border-color: #2563eb; }
+        .custom-checkbox:checked::before {
+            content: "✓";
+            color: white;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
     </style>
 </head>
-<body class="bg-[#111827] text-gray-100 min-h-screen p-2 sm:p-6">
+<body class="bg-[#111827] text-gray-100 min-h-screen p-3 sm:p-6">
 
-    <div id="checklist-container" class="max-w-2xl mx-auto bg-[#1f2937] rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-700">
+    <div id="checklist-container" class="max-w-2xl mx-auto bg-[#1f2937] rounded-2xl shadow-xl p-5 sm:p-6 border border-gray-700">
         
-        <div class="flex flex-col items-center text-center border-b border-gray-700 pb-4 mb-4">
-            <img src="company_logo_38.png" alt="Company Logo" class="h-14 w-auto object-contain mb-2" onerror="this.style.display='none'">
-            <h1 class="text-xl font-bold text-white tracking-wide">急救箱每週檢查表</h1>
-            <p class="text-xs text-gray-400 mt-0.5">First Aid Box Weekly Checklist</p>
+        <div class="flex flex-col items-center text-center border-b border-gray-700 pb-5 mb-5 pdf-avoid-break">
+            <img src="company_logo_38.png" alt="Company Logo" class="h-16 w-auto object-contain mb-3 block" onerror="this.src='https://placehold.co/200x60/1f2937/ffffff?text=Logo';">
+            <h1 id="main-title" class="text-2xl font-bold text-white tracking-wide">急救箱每週檢查表</h1>
+            <p id="sub-title" class="text-xs text-gray-400 mt-1">First Aid Box Weekly Checklist</p>
         </div>
 
-        <div class="grid grid-cols-1 gap-3 mb-4">
+        <div class="space-y-4 mb-5 pdf-avoid-break">
             <div>
-                <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
                     Project Select / 選擇地盤項目
                 </label>
                 <select id="project-select" required
-                        class="w-full bg-[#374151] border border-gray-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="w-full bg-[#374151] border border-gray-600 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="" disabled selected>-- Please Select a Project / 請選擇項目 --</option>
                     <option value="(952) NE/2017/03">(952) NE/2017/03</option>
                     <option value="(969) Hiu Ming Street">(969) Hiu Ming Street</option>
@@ -72,22 +93,22 @@
             </div>
 
             <div>
-                <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
                     Workforce Size / 地盤工人總數 (Cap. 59I)
                 </label>
-                <select id="workforce-select" onchange="updateQuantities()" class="w-full bg-[#374151] border border-gray-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select id="workforce-select" onchange="updateQuantities()" class="w-full bg-[#374151] border border-gray-600 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="under50">Fewer than 50 workers / 少於 50 人</option>
-                    <option value="over50" selected>50 or more workers / 50 人或以上</option>
+                    <option value="over50" selected>50 or more workers / 50 人 or 以上</option>
                 </select>
             </div>
         </div>
 
-        <div id="stretcher-warning" class="bg-amber-950/40 border border-amber-500/40 rounded-xl p-3 mb-4 avoid-break hidden">
-            <div class="flex items-start space-x-2">
-                <span class="text-amber-400 text-base">⚠️</span>
+        <div id="stretcher-warning" class="bg-amber-950/40 border border-amber-500/50 rounded-xl p-4 mb-5 pdf-avoid-break hidden">
+            <div class="flex items-start space-x-3">
+                <span class="text-amber-400 text-lg">⚠️</span>
                 <div>
                     <h4 class="text-xs font-bold text-amber-400">Cap. 59I MANDATORY ALERT (50+ Workers)</h4>
-                    <p class="text-[11px] text-amber-300/90 mt-0.5 leading-tight">
+                    <p class="text-[11px] text-amber-300/90 mt-0.5 leading-relaxed">
                         The contractor must cause a <strong>Stretcher</strong> to be provided at the site and ensure it is kept alongside this first aid box.
                     </p>
                     <p class="text-[11px] text-amber-400/90 font-medium mt-0.5">
@@ -97,13 +118,13 @@
             </div>
         </div>
 
-        <div class="border border-gray-700 rounded-xl overflow-hidden bg-[#1f2937] mb-4 avoid-break">
+        <div class="border border-gray-700 rounded-xl overflow-hidden bg-[#1f2937] mb-5 pdf-avoid-break">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-[#2d3748] border-b border-gray-700">
-                        <th class="p-3 text-xs font-bold text-white tracking-wide">STATUTORY ITEMS / 法定必備項目</th>
-                        <th class="p-3 text-xs font-bold text-center text-white w-28">REQUIREMENT</th>
-                        <th class="p-3 text-xs font-bold text-center text-white w-16">CHECK</th>
+                        <th class="p-3 text-xs font-bold text-white uppercase tracking-wider">Statutory Items / 法定必備項目</th>
+                        <th class="p-3 text-xs font-bold text-center text-white w-28 uppercase tracking-wider">Required</th>
+                        <th class="p-3 text-xs font-bold text-center text-white w-16 uppercase tracking-wider">Check</th>
                     </tr>
                 </thead>
                 <tbody id="items-table-body" class="divide-y divide-gray-700">
@@ -111,44 +132,46 @@
             </table>
         </div>
 
-        <div class="border border-gray-700 rounded-xl p-4 bg-[#1a2230] mb-4 avoid-break">
-            <h3 class="text-xs font-bold text-white tracking-wide mb-2 uppercase">📸 Photo Record / 現場拍照紀錄</h3>
+        <div class="border border-gray-700 rounded-xl p-4 bg-[#1a2332] mb-5 pdf-avoid-break">
+            <h3 class="text-xs font-bold text-white tracking-wide mb-3 uppercase flex items-center gap-1.5">
+                <span>📸</span> Photo Record / 現場拍照紀錄
+            </h3>
             
             <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="previewPhoto(event)">
             
             <div class="flex flex-col items-center justify-center">
                 <button type="button" onclick="document.getElementById('camera-input').click()" data-html2canvas-ignore="true"
-                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 px-4 rounded-lg transition mb-3 flex items-center space-x-2 shadow-md">
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-5 rounded-lg transition mb-3 flex items-center space-x-2 shadow-md">
                     <span>📷</span>
-                    <span>Take Photo / 即時拍照</span>
+                    <span>Take Photo / 啟動相機拍照</span>
                 </button>
 
-                <div id="photo-preview-container" class="hidden w-full max-w-xs border border-gray-600 rounded-lg overflow-hidden bg-[#111827] relative">
-                    <img id="photo-preview" src="#" alt="First Aid Box Condition" class="w-full h-auto object-cover">
+                <div id="photo-preview-container" class="hidden w-full max-w-xs border border-gray-600 rounded-xl overflow-hidden bg-[#111827] relative mt-1 shadow-lg">
+                    <img id="photo-preview" src="#" alt="First Aid Box Condition" class="w-full h-auto object-cover max-h-64">
                     <button type="button" onclick="removePhoto()" data-html2canvas-ignore="true"
-                            class="absolute top-1 right-1 bg-red-600/80 hover:bg-red-700 text-white text-[10px] font-black px-2 py-1 rounded">
+                            class="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold px-2 py-1 rounded shadow">
                         REMOVE / 刪除
                     </button>
                 </div>
-                <p id="photo-placeholder-text" class="text-[11px] text-gray-500 italic">No photo attached. Click button to record box status before exporting.</p>
+                <p id="photo-placeholder-text" class="text-xs text-gray-500 italic mt-1">No photo attached. Take a photo before exporting.</p>
             </div>
         </div>
 
-        <div class="mt-6 flex gap-3" data-html2canvas-ignore="true">
-            <button onclick="exportToPDF()" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-3 px-4 rounded-xl transition duration-200 shadow-lg flex items-center justify-center space-x-1">
+        <div class="mt-6 flex gap-4" data-html2canvas-ignore="true">
+            <button onclick="exportToPDF()" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3 px-4 rounded-xl transition duration-200 shadow-lg flex items-center justify-center space-x-2">
                 <span>📁</span>
                 <span>Export PDF / 匯出報告</span>
             </button>
-            <button onclick="resetForm()" class="w-1/2 bg-gray-700 hover:bg-gray-600 text-gray-300 font-bold text-xs py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center space-x-1">
+            <button onclick="resetForm()" class="w-1/2 bg-gray-700 hover:bg-gray-600 text-gray-300 font-bold text-sm py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center space-x-2">
                 <span>🔄</span>
-                <span>Reset / 重設</span>
+                <span>Reset / 重設表單</span>
             </button>
         </div>
     </div>
 
     <script>
         const checklistItems = [
-            { id: 'booklet', en: '"Hints on First Aid" Booklet', zh: '「急救指南」小冊子', qtyUnder50: '1 pc', qtyOver50: '1 pc' },
+            { id: 'booklet', en: '"Hints on First Aid" Booklet', zh: '「急救指南」小冊子 (正本/副本)', qtyUnder50: '1 pc', qtyOver50: '1 pc' },
             { id: 'dress_s', en: 'Sterile Dressings (Small)', zh: '消毒不含藥敷料：細碼 (手指用)', qtyUnder50: '12 pcs', qtyOver50: '12 pcs' },
             { id: 'dress_m', en: 'Sterile Dressings (Medium)', zh: '消毒不含藥敷料：中碼 (手腳用)', qtyUnder50: '6 pcs', qtyOver50: '6 pcs' },
             { id: 'dress_l', en: 'Sterile Dressings (Large)', zh: '消毒不含藥敷料：大碼 (身體用)', qtyUnder50: '6 pcs', qtyOver50: '6 pcs' },
@@ -170,23 +193,23 @@
             checklistItems.forEach(item => {
                 const targetQty = tier === 'under50' ? item.qtyUnder50 : item.qtyOver50;
                 const tr = document.createElement('tr');
-                tr.className = 'hover:bg-[#283548] transition';
+                tr.className = 'hover:bg-[#283548] transition pdf-avoid-break';
                 tr.innerHTML = `
                     <td class="p-3">
-                        <div class="text-xs font-semibold text-white">${item.en}</div>
-                        <div class="text-[11px] text-gray-400 mt-0.5">${item.zh}</div>
+                        <div class="text-xs font-semibold text-white item-en-text">${item.en}</div>
+                        <div class="text-[11px] text-gray-400 mt-0.5 item-zh-text">${item.zh}</div>
                     </td>
-                    <td class="p-3 text-center text-xs font-mono font-bold text-blue-400 bg-slate-900/20">
+                    <td class="p-3 text-center text-xs font-mono font-bold text-blue-400 bg-slate-900/20 item-qty-badge">
                         ${targetQty}
                     </td>
                     <td class="p-3 text-center">
-                        <input type="checkbox" checked class="w-4 h-4 rounded text-blue-600 bg-gray-700 border-gray-600 focus:ring-blue-500">
+                        <input type="checkbox" checked class="custom-checkbox">
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
 
-            // 處理擔架床警告
+            // 處理法規警告顯示/隱藏
             const warningBox = document.getElementById('stretcher-warning');
             if (tier === 'over50') {
                 warningBox.classList.remove('hidden');
@@ -195,7 +218,7 @@
             }
         }
 
-        // 拍照與預覽處理邏輯
+        // 相機啟動及預覽處理
         function previewPhoto(event) {
             const input = event.target;
             if (input.files && input.files[0]) {
@@ -212,7 +235,6 @@
         function removePhoto() {
             document.getElementById('camera-input').value = "";
             document.getElementById('photo-preview').src = "#";
-            document.getElementById('photo-preview-container').classLabel = 'hidden';
             document.getElementById('photo-preview-container').classList.add('hidden');
             document.getElementById('photo-placeholder-text').classList.remove('hidden');
         }
@@ -229,31 +251,74 @@
             renderTable('over50');
         }
 
-        // 高保真 A4 完美單頁不移位 PDF 導出驅動
+        // 終極高保真 A4 完美抗裁剪、防走位 PDF 導出驅動
         function exportToPDF() {
             const element = document.getElementById('checklist-container');
             const project = document.getElementById('project-select').value || "Unknown_Project";
             const cleanProjectName = project.replace(/[^a-zA-Z0-9]/g, "_");
             const timestamp = new Date().toISOString().slice(0, 10);
             
+            // 完美貼合 A4 A項標準配置參數
             const opt = {
-                margin: [8, 8, 8, 8],
+                margin: [10, 10, 10, 10],
                 filename: `急救箱每週檢查表_${cleanProjectName}_${timestamp}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { 
                     scale: 2, 
                     useCORS: true, 
                     logging: false,
-                    backgroundColor: '#1f2937', // 完美還原網頁的高質感配色深色主題
-                    letterRendering: true
+                    backgroundColor: '#ffffff', // 核心強制：使用白底，百分百避免產生黑色大方塊
+                    windowWidth: 800 // 固定虛擬寬度，防止響應式縮放導致 A4 內容被裁剪
                 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            // 直接觸發生成，配合內置 A4 寬度微調，杜絕任何錯位或多餘白頁
-            html2pdf().set(opt).from(element).save();
+            // 執行深度複製轉換 (在導出瞬間，把背景改成乾淨整潔的政府/企業審查打印格式，確保字體清晰、不移位)
+            html2pdf().set(opt).from(element).toContainer().toCanvas().set({
+                jsPDF: opt.jsPDF,
+                html2canvas: {
+                    ...opt.html2canvas,
+                    onclone: (clonedDoc) => {
+                        const box = clonedDoc.getElementById('checklist-container');
+                        box.style.background = '#ffffff';
+                        box.style.color = '#111827';
+                        box.style.boxShadow = 'none';
+                        box.style.border = 'none';
+                        box.style.padding = '5px';
+
+                        // 變更標題顏色
+                        clonedDoc.getElementById('main-title').style.color = '#111827';
+                        clonedDoc.getElementById('sub-title').style.color = '#4b5563';
+
+                        // 變更表格內文字顏色
+                        const rows = clonedDoc.querySelectorAll('#items-table-body tr');
+                        rows.forEach(row => {
+                            row.style.borderBottom = '1px solid #d1d5db';
+                            const enText = row.querySelector('.item-en-text');
+                            const zhText = row.querySelector('.item-zh-text');
+                            const badge = row.querySelector('.item-qty-badge');
+                            if(enText) enText.style.color = '#111827';
+                            if(zhText) zhText.style.color = '#4b5563';
+                            if(badge) {
+                                badge.style.color = '#1e40af';
+                                badge.style.background = '#f3f4f6';
+                            }
+                        });
+
+                        // 處理擔架床警告卡列印底色
+                        const warning = clonedDoc.getElementById('stretcher-warning');
+                        if (warning && !warning.classList.contains('hidden')) {
+                            warning.style.background = '#fffbeb';
+                            warning.style.borderColor = '#f59e0b';
+                            const warningTexts = warning.querySelectorAll('h4, p');
+                            warningTexts.forEach(t => t.style.color = '#78350f');
+                        }
+                    }
+                }
+            }).save();
         }
 
+        // 初始化加載表格
         window.onload = () => { renderTable('over50'); };
     </script>
 </body>
