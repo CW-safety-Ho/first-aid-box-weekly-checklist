@@ -3,28 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>急救箱每週檢查表 / First Aid Box Weekly Checklist</title>
+    <title>急救箱每週檢查表 | First Aid Box Weekly Checklist</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    </style>
 </head>
-<body class="bg-slate-900 text-slate-100 antialiased p-4 pb-12 font-sans">
+<body class="bg-[#111827] text-gray-100 min-h-screen p-4 sm:p-6">
 
-    <div id="printableArea" class="max-w-md mx-auto bg-slate-800 rounded-2xl shadow-2xl p-6 border border-slate-700">
+    <div id="checklist-container" class="max-w-2xl mx-auto bg-[#1f2937] rounded-2xl shadow-xl p-6 border border-gray-700">
         
-        <header class="mb-6 border-b border-slate-700 pb-4">
-            <span class="bg-blue-600 text-white text-[10px] uppercase font-black px-2 py-0.5 rounded tracking-wider">Cap. 59I Compliance / 第59I章合規</span>
-            <h1 class="text-xl font-black text-white mt-1">急救箱每週檢查表</h1>
-            <h2 class="text-xs font-bold text-slate-400">First Aid Box Weekly Checklist</h2>
-        </header>
+        <div class="flex flex-col items-center text-center border-b border-gray-700 pb-6 mb-6">
+            <img src="company_logo_38.png" alt="Company Logo" class="h-16 w-auto object-contain mb-3" onerror="this.style.display='none'">
+            <h1 class="text-2xl font-bold text-white tracking-wide">急救箱每週檢查表</h1>
+            <p class="text-sm text-gray-400 mt-1">First Aid Box Weekly Checklist</p>
+        </div>
 
-        <form id="checklistForm" onsubmit="handlePDFExport(event)" class="space-y-6">
-            
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-700">
-                <label class="block text-xs font-black uppercase text-slate-400 tracking-wider mb-2">
+        <div class="space-y-4 mb-6">
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                     Project Select / 選擇地盤項目
                 </label>
-                <select id="projectSelect" required
-                        class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-emerald-400 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <select id="project-select" required
+                        class="w-full bg-[#374151] border border-gray-600 rounded-lg px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="" disabled selected>-- Please Select a Project / 請選擇項目 --</option>
                     <option value="(952) NE/2017/03">(952) NE/2017/03</option>
                     <option value="(969) Hiu Ming Street">(969) Hiu Ming Street</option>
@@ -66,224 +69,184 @@
                 </select>
             </div>
 
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-700">
-                <label class="block text-xs font-black uppercase text-slate-400 tracking-wider mb-2">
-                    Workforce Size / 地盤工人總數
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                    Workforce Size / 地盤工人總數 (Cap. 59I)
                 </label>
-                <select id="workforceBracket" onchange="calculateStatutoryLimits()" required
-                        class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-blue-400 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="under50" selected>Fewer than 50 workers / 少於 50 人</option>
-                    <option value="over50">50 or more workers / 50 人或以上</option>
+                <select id="workforce-select" onchange="updateQuantities()" class="w-full bg-[#374151] border border-gray-600 rounded-lg px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="under50">Fewer than 50 workers / 少於 50 人</option>
+                    <option value="over50" selected>50 or more workers / 50 人或以上</option>
                 </select>
-                <div id="bracketNotice" class="text-[11px] text-amber-400 mt-2 font-medium"></div>
             </div>
+        </div>
 
-            <div class="space-y-3">
-                <h3 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-2">Statutory Items / 法定必備項目</h3>
-
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-750 flex flex-col space-y-2">
-                    <div class="flex justify-between items-start">
-                        <div class="max-w-[70%]">
-                            <h4 class="text-xs font-bold text-white leading-tight">"Hints on First Aid" Booklet</h4>
-                            <p class="text-[11px] text-slate-400">「急救指南」小冊子 (正本/副本)</p>
-                        </div>
-                        <span class="text-[10px] bg-slate-800 text-blue-400 font-mono px-2 py-1 rounded border border-slate-700">要求: <span id="req_booklet">1</span> 本</span>
-                    </div>
-                    <input type="number" id="qty_booklet" min="0" value="1" required class="w-full bg-slate-900 border border-slate-700 rounded-md px-2 py-1 text-xs font-mono text-slate-100">
-                </div>
-
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-750 flex flex-col space-y-2">
-                    <div class="flex justify-between items-start">
-                        <div class="max-w-[70%]">
-                            <h4 class="text-xs font-bold text-white leading-tight">Sterile Dressings (Small)</h4>
-                            <p class="text-[11px] text-slate-400">消毒不含藥敷料：細碼 (手指用)</p>
-                        </div>
-                        <span class="text-[10px] bg-slate-800 text-blue-400 font-mono px-2 py-1 rounded border border-slate-700">要求: <span id="req_sterile_s">12</span> 塊</span>
-                    </div>
-                    <input type="number" id="qty_sterile_s" min="0" value="12" required class="w-full bg-slate-900 border border-slate-700 rounded-md px-2 py-1 text-xs font-mono text-slate-100">
-                </div>
-
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-750 flex flex-col space-y-2">
-                    <div class="flex justify-between items-start">
-                        <div class="max-w-[70%]">
-                            <h4 class="text-xs font-bold text-white leading-tight">Sterile Dressings (Medium)</h4>
-                            <p class="text-[11px] text-slate-400">消毒不含藥敷料：中碼 (手腳用)</p>
-                        </div>
-                        <span class="text-[10px] bg-slate-800 text-blue-400 font-mono px-2 py-1 rounded border border-slate-700">要求: <span id="req_sterile_m">6</span> 塊</span>
-                    </div>
-                    <input type="number" id="qty_sterile_m" min="0" value="6" required class="w-full bg-slate-900 border border-slate-700 rounded-md px-2 py-1 text-xs font-mono text-slate-100">
-                </div>
-
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-750 flex flex-col space-y-2">
-                    <div class="flex justify-between items-start">
-                        <div class="max-w-[70%]">
-                            <h4 class="text-xs font-bold text-white leading-tight">Waterproof Adhesive Dressings</h4>
-                            <p class="text-[11px] text-slate-400">防水黏性傷口敷料 (OK繃)</p>
-                        </div>
-                        <span class="text-[10px] bg-slate-800 text-blue-400 font-mono px-2 py-1 rounded border border-slate-700">要求: <span id="req_adhesive">24</span> 塊</span>
-                    </div>
-                    <input type="number" id="qty_adhesive" min="0" value="24" required class="w-full bg-slate-900 border border-slate-700 rounded-md px-2 py-1 text-xs font-mono text-slate-100">
-                </div>
-
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-750 flex flex-col space-y-2">
-                    <div class="flex justify-between items-start">
-                        <div class="max-w-[70%]">
-                            <h4 class="text-xs font-bold text-white leading-tight">Triangular Bandages</h4>
-                            <p class="text-[11px] text-slate-400">原色棉布三角繃帶</p>
-                        </div>
-                        <span class="text-[10px] bg-slate-800 text-blue-400 font-mono px-2 py-1 rounded border border-slate-700">要求: <span id="req_triangular">4</span> 條</span>
-                    </div>
-                    <input type="number" id="qty_triangular" min="0" value="4" required class="w-full bg-slate-900 border border-slate-700 rounded-md px-2 py-1 text-xs font-mono text-slate-100">
-                </div>
-
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-750 flex flex-col space-y-2">
-                    <div class="flex justify-between items-start">
-                        <div class="max-w-[70%]">
-                            <h4 class="text-xs font-bold text-white leading-tight">Adhesive Plaster</h4>
-                            <p class="text-[11px] text-slate-400">黏貼膠布 (氧化鋅)</p>
-                        </div>
-                        <span class="text-[10px] bg-slate-800 text-blue-400 font-mono px-2 py-1 rounded border border-slate-700">要求: <span id="req_plaster">1</span> 卷</span>
-                    </div>
-                    <input type="number" id="qty_plaster" min="0" value="1" required class="w-full bg-slate-900 border border-slate-700 rounded-md px-2 py-1 text-xs font-mono text-slate-100">
-                </div>
-
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-750 flex flex-col space-y-2">
-                    <div class="flex justify-between items-start">
-                        <div class="max-w-[70%]">
-                            <h4 class="text-xs font-bold text-white leading-tight">Absorbent Cotton Wool</h4>
-                            <p class="text-[11px] text-slate-400">吸水脫脂棉 (30克包裝)</p>
-                        </div>
-                        <span class="text-[10px] bg-slate-800 text-blue-400 font-mono px-2 py-1 rounded border border-slate-700">要求: <span id="req_cotton">6</span> 包</span>
-                    </div>
-                    <input type="number" id="qty_cotton" min="0" value="6" required class="w-full bg-slate-900 border border-slate-700 rounded-md px-2 py-1 text-xs font-mono text-slate-100">
-                </div>
-
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-750 flex flex-col space-y-2">
-                    <div class="flex justify-between items-start">
-                        <div class="max-w-[70%]">
-                            <h4 class="text-xs font-bold text-white leading-tight">Pressure Bandage</h4>
-                            <p class="text-[11px] text-slate-400">壓力繃帶</p>
-                        </div>
-                        <span class="text-[10px] bg-slate-800 text-blue-400 font-mono px-2 py-1 rounded border border-slate-700">要求: <span id="req_pressure">1</span> 條</span>
-                    </div>
-                    <input type="number" id="qty_pressure" min="0" value="1" required class="w-full bg-slate-900 border border-slate-700 rounded-md px-2 py-1 text-xs font-mono text-slate-100">
-                </div>
-
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-750 flex flex-col space-y-2">
-                    <div class="flex justify-between items-start">
-                        <div class="max-w-[70%]">
-                            <h4 class="text-xs font-bold text-white leading-tight">Safety Pins</h4>
-                            <p class="text-[11px] text-slate-400">安全扣針</p>
-                        </div>
-                        <span class="text-[10px] bg-slate-800 text-blue-400 font-mono px-2 py-1 rounded border border-slate-700">要求: <span id="req_pins">6</span> 個</span>
-                    </div>
-                    <input type="number" id="qty_pins" min="0" value="6" required class="w-full bg-slate-900 border border-slate-700 rounded-md px-2 py-1 text-xs font-mono text-slate-100">
+        <div id="stretcher-warning" class="bg-amber-950/40 border border-amber-500/50 rounded-xl p-4 mb-6 hidden">
+            <div class="flex items-start space-x-3">
+                <span class="text-amber-400 text-xl">⚠️</span>
+                <div>
+                    <h4 class="text-sm font-semibold text-amber-400">Cap. 59I MANDATORY ALERT (50+ Workers)</h4>
+                    <p class="text-xs text-amber-300/90 mt-1 leading-relaxed">
+                        The contractor must cause a <strong>Stretcher</strong> to be provided at the site and ensure it is kept alongside this first aid box.
+                    </p>
+                    <p class="text-xs text-amber-400/90 mt-0.5 font-medium">
+                        法例警告：50人或以上地盤，承建商必須在急急箱或急救櫃旁邊額外設置一副「擔架床」。
+                    </p>
                 </div>
             </div>
+        </div>
 
-            <div class="border-t border-slate-700 pt-4 space-y-3">
-                <h3 class="text-xs font-black uppercase text-slate-400 tracking-wider">Container Labeling / 外盒法定標識</h3>
-                
-                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-750">
-                    <span class="text-xs font-bold text-slate-300">Marked "FIRST AID" & "急救"?<br><span class="text-slate-500 font-normal">外盒清楚標明「急救」及 "FIRST AID" 字樣？</span></span>
-                    <input type="checkbox" id="boxLabelCheck" required class="h-5 w-5 rounded border-slate-700 bg-slate-900 text-blue-600">
-                </div>
-
-                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-750">
-                    <span class="text-xs font-bold text-slate-300">Notice of Certified First-Aiders?<br><span class="text-slate-500 font-normal">盒外貼有告示，列明負責之合格急救員姓名？</span></span>
-                    <input type="checkbox" id="aiderNoticeCheck" required class="h-5 w-5 rounded border-slate-700 bg-slate-900 text-blue-600">
-                </div>
+        <div class="border border-gray-700 rounded-xl overflow-hidden bg-[#1f2937]">
+            <div class="bg-[#2d3748] px-4 py-3 border-b border-gray-700">
+                <h3 class="text-sm font-semibold text-white tracking-wide">STATUTORY ITEMS / 法定必備項目</h3>
             </div>
-
-            <div class="border-t border-slate-700 pt-4 space-y-4">
-                <h3 class="text-xs font-black uppercase text-slate-400 tracking-wider">Site-Specific Quality Controls / 地盤質控</h3>
-                
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-750">
-                    <label class="block text-xs font-bold text-slate-400 mb-1">Earliest Item Expiry Date / 最早物品到期日</label>
-                    <input type="date" id="expiryDate" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-100">
+            
+            <div class="divide-y divide-gray-700" id="items-list">
                 </div>
+        </div>
 
-                <div class="p-4 rounded-xl bg-red-950/20 border border-red-900/40 space-y-2">
-                    <div class="flex items-start space-x-3">
-                        <input type="checkbox" id="containsMeds" class="mt-0.5 h-5 w-5 rounded border-red-700 bg-slate-950 text-red-600" onchange="toggleMedicationSafetyLock()">
-                        <label for="containsMeds" class="text-xs font-bold text-red-400 leading-tight">
-                            FAILSAFE: Contains oral medications (e.g. pills)?<br>
-                            <span class="text-red-500/80 font-medium">安全鎖：若急救箱內含有任何口服藥物，請勾選。</span>
-                        </label>
-                    </div>
-                    <div id="medViolationAlert" class="hidden text-[11px] bg-red-900/50 text-red-200 p-2.5 rounded-lg border border-red-700 font-medium">
-                        ⚠️ STATUTORY VIOLATION: Legal guidelines strictly forbid oral medication within site first aid boxes. Export locked.<br>
-                        勞工處指引嚴禁在急救箱存放口服藥物。必須全數移除方可匯出 PDF。
-                    </div>
-                </div>
-            </div>
-
-            <button type="submit" id="submitBtn" data-html2canvas-ignore="true"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm py-3 px-4 rounded-xl transition-all shadow-lg">
-                Validate & Export PDF / 驗證並匯出 PDF 報告
+        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+            <button onclick="exportToPDF()" class="w-full sm:w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-lg flex items-center justify-center space-x-2">
+                <span>📁</span>
+                <span>Export PDF / 匯出報告</span>
             </button>
-        </form>
+            <button onclick="resetForm()" class="w-full sm:w-1/2 bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center space-x-2">
+                <span>🔄</span>
+                <span>Reset / 重設表單</span>
+            </button>
+        </div>
     </div>
 
     <script>
-        function calculateStatutoryLimits() {
-            const bracket = document.getElementById('workforceBracket').value;
-            const notice = document.getElementById('bracketNotice');
+        // 法定項目定義（根據第 59I 章 附表 4）
+        const checklistItems = [
+            { id: 'booklet', en: '"Hints on First Aid" Booklet', zh: '「急救指南」小冊子 (正本/副本)', qtyUnder50: 1, qtyOver50: 1 },
+            { id: 'dress_s', en: 'Sterile Unmedicated Dressings (Small)', zh: '消毒不含藥敷料：細碼 (手指用)', qtyUnder50: 12, qtyOver50: 12 },
+            { id: 'dress_m', en: 'Sterile Unmedicated Dressings (Medium)', zh: '消毒不含藥敷料：中碼 (手腳用)', qtyUnder50: 6, qtyOver50: 6 },
+            { id: 'dress_l', en: 'Sterile Unmedicated Dressings (Large)', zh: '消毒不含藥敷料：大碼 (身體用)', qtyUnder50: 6, qtyOver50: 6 },
+            { id: 'waterproof_ad', en: 'Waterproof Adhesive Wound Dressings', zh: '各大小尺碼不同的防水黏性傷口敷料', qtyUnder50: 24, qtyOver50: 24 },
+            { id: 'triangular', en: 'Triangular Bandages (Unbleached Calico)', zh: '原色棉布三角繃帶 (最長邊≥1.3米)', qtyUnder50: 4, qtyOver50: 4 },
+            { id: 'plaster', en: 'Rolls of Adhesive Plaster (Zinc Oxide)', zh: '黏貼膠布 (氧化鋅) (至少4.5米x25毫米)', qtyUnder50: 1, qtyOver50: 1 },
+            { id: 'cotton', en: 'Packets of Absorbent Cotton Wool (30g)', zh: '30克包裝的吸水脫脂棉', qtyUnder50: 6, qtyOver50: 6 },
+            { id: 'pressure_b', en: 'Pressure Bandage', zh: '壓力繃帶', qtyUnder50: 1, qtyOver50: 1 },
+            { id: 'pins', en: 'Safety Pins', zh: '安全扣針', qtyUnder50: 6, qtyOver50: 6 },
+            { id: 'eyebath', en: 'Eye Bath', zh: '洗眼杯', qtyUnder50: 'Sufficient / 足量', qtyOver50: 'Sufficient / 足量' },
+            { id: 'label_marking', en: 'Container Labeling ("FIRST AID" & "急救")', zh: '急救箱外殼清晰標明「急救」及 "FIRST AID"', qtyUnder50: 'Required', qtyOver50: 'Required' },
+            { id: 'aider_notice', en: 'Notice of Certified First-Aiders in Charge', zh: '貼有負責該設施之指定合資格急救員姓名告示', qtyUnder50: 'Required', qtyOver50: 'Required' }
+        ];
 
-            if (bracket === "under50") {
-                notice.innerHTML = "ℹ️ Cap. 59I Standard Requirements active.<br>法規提示：適用於少於 50 人地盤之法定配額。";
-            } else if (bracket === "over50") {
-                notice.innerHTML = "🚨 Cap. 59I MANDATORY ALERT: 50 or more workers require 1 Stretcher (擔架床) to be provided alongside this box!<br>法規警告：50人或以上地盤，必須在急救箱旁額外配置一副「擔架床」！";
-            }
-        }
+        function renderChecklist(tier) {
+            const container = document.getElementById('items-list');
+            container.innerHTML = '';
 
-        function toggleMedicationSafetyLock() {
-            const hasMeds = document.getElementById('containsMeds').checked;
-            const alertBox = document.getElementById('medViolationAlert');
-            const submitBtn = document.getElementById('submitBtn');
+            checklistItems.forEach(item => {
+                const targetQty = tier === 'under50' ? item.qtyUnder50 : item.qtyOver50;
+                
+                const itemRow = document.createElement('div');
+                itemRow.className = 'p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#283548] transition';
+                
+                itemRow.innerHTML = `
+                    <div class="space-y-0.5">
+                        <p class="text-sm font-semibold text-white">${item.en}</p>
+                        <p class="text-xs text-gray-400">${item.zh}</p>
+                    </div>
+                    <div class="flex items-center space-x-4 self-end sm:self-center">
+                        <span class="bg-blue-900/50 border border-blue-700/60 text-blue-300 text-xs font-medium px-2.5 py-1 rounded-md">
+                            Req / 要求: ${targetQty}
+                        </span>
+                        <input type="checkbox" checked class="w-5 h-5 rounded text-blue-600 bg-gray-700 border-gray-600 focus:ring-blue-500 focus:ring-offset-gray-800">
+                    </div>
+                `;
+                container.appendChild(itemRow);
+            });
 
-            if (hasMeds) {
-                alertBox.classList.remove('hidden');
-                submitBtn.disabled = true;
-                submitBtn.classList.replace('bg-blue-600', 'bg-slate-700');
-                submitBtn.classList.add('cursor-not-allowed');
+            // 根據工人人數動態顯示/隱藏擔架床警告
+            const warningBox = document.getElementById('stretcher-warning');
+            if (tier === 'over50') {
+                warningBox.classList.remove('hidden');
             } else {
-                alertBox.classList.add('hidden');
-                submitBtn.disabled = false;
-                submitBtn.classList.replace('bg-slate-700', 'bg-blue-600');
-                submitBtn.classList.remove('cursor-not-allowed');
+                warningBox.classList.add('hidden');
             }
         }
 
-        // PDF 匯出驅動函數
-        function handlePDFExport(event) {
-            event.preventDefault();
+        function updateQuantities() {
+            const tier = document.getElementById('workforce-select').value;
+            renderChecklist(tier);
+        }
 
-            if (document.getElementById('containsMeds').checked) {
-                alert("CRITICAL VIOLATION: Cannot export PDF while oral medications are present.");
-                return false;
-            }
+        function resetForm() {
+            document.getElementById('project-select').selectedIndex = 0;
+            document.getElementById('workforce-select').value = 'over50';
+            renderChecklist('over50');
+        }
 
-            const projectCode = document.getElementById('projectSelect').value;
-            const element = document.getElementById('printableArea');
+        function exportToPDF() {
+            const element = document.getElementById('checklist-container');
+            const project = document.getElementById('project-select').value || "Unknown_Project";
+            const cleanProjectName = project.replace(/[^a-zA-Z0-9]/g, "_");
+            const timestamp = new Date().toISOString().slice(0, 10);
             
-            // 配置 html2pdf 參數，檔名開頭使用指定的中文名稱
             const opt = {
-                margin:       10,
-                filename:     `急救箱每週檢查表_${projectCode.replace(/[^a-zA-Z0-9]/g, "_")}_${new Date().toISOString().slice(0,10)}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#1e293b' },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                margin: [10, 10, 10, 10],
+                filename: `急救箱每週檢查表_${cleanProjectName}_${timestamp}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true, 
+                    logging: false,
+                    backgroundColor: '#ffffff' // 強制底層用白底進行畫布渲染，避免黑畫面
+                },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            // 執行非同步 PDF 生成與下載
-            html2pdf().set(opt).from(element).save().then(() => {
-                alert(`✅ 急救箱每週檢查表 (${projectCode}) PDF 報告已成功生成！`);
-            });
+            // 利用 onclone 在背景將 DOM 樣式臨時改為白底黑字（高清晰列印風格），100% 解決 PDF 裁剪與深色黑掉問題
+            html2pdf().set(opt).from(element).toContainer().toCanvas().set({
+                jsPDF: opt.jsPDF,
+                html2canvas: {
+                    ...opt.html2canvas,
+                    onclone: (clonedDoc) => {
+                        const clonedContainer = clonedDoc.getElementById('checklist-container');
+                        clonedContainer.style.background = '#ffffff';
+                        clonedContainer.style.color = '#111827';
+                        clonedContainer.style.boxShadow = 'none';
+                        clonedContainer.style.border = 'none';
+
+                        const h1 = clonedContainer.querySelector('h1');
+                        if(h1) h1.style.color = '#111827';
+                        
+                        const warning = clonedContainer.getElementById('stretcher-warning');
+                        if (warning && !warning.classList.contains('hidden')) {
+                            warning.style.background = '#fffbeb';
+                            warning.style.borderColor = '#f59e0b';
+                            warning.style.color = '#78350f';
+                            const warningTexts = warning.querySelectorAll('h4, p');
+                            warningTexts.forEach(t => t.style.color = '#78350f');
+                        }
+
+                        const rows = clonedContainer.querySelectorAll('#items-list > div');
+                        rows.forEach(row => {
+                            row.style.borderBottom = '1px solid #e5e7eb';
+                            const texts = row.querySelectorAll('p');
+                            if(texts[0]) texts[0].style.color = '#111827';
+                            if(texts[1]) texts[1].style.color = '#4b5563';
+                            
+                            const badge = row.querySelector('span');
+                            if(badge) {
+                                badge.style.background = '#f3f4f6';
+                                badge.style.borderColor = '#d1d5db';
+                                badge.style.color = '#1f2937';
+                            }
+                        });
+
+                        // 隱藏 PDF 裡的按鈕
+                        const buttons = clonedContainer.querySelector('.mt-8');
+                        if (buttons) buttons.style.display = 'none';
+                    }
+                }
+            }).save();
         }
 
-        // 初始化
-        calculateStatutoryLimits();
+        // 頁面加載自動初始化
+        window.onload = () => { renderChecklist('over50'); };
     </script>
 </body>
 </html>
