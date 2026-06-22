@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>First Aid Box Weekly Checklist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+        input[type="number"] { -moz-appearance: textfield; }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased font-sans pb-12">
+
+    <header class="bg-[#007640] text-white p-4 sticky top-0 z-50 shadow-md">
+        <div class="max-w-md mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <img src="company_logo.png" alt="Company Logo" class="w-12 h-12 object-contain rounded bg-white p-1" onerror="this.src='https://placehold.co/120x120?text=Logo'">
+                <div>
+                    <h1 class="text-base font-bold leading-tight">First Aid Box Weekly Checklist</h1>
+                    <p class="text-xs text-green-100">急救箱每週檢查表</p>
+                </div>
+            </div>
+            <span id="header-project-badge" class="bg-amber-500 text-neutral-900 text-[10px] px-2 py-1 rounded font-extrabold uppercase tracking-wide max-w-[120px] truncate">
+                Select Project
+            </span>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto p-4 space-y-4">
+
+        <section class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 border-b pb-1">1. Metadata / 基本巡查資料</h2>
+            
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Project Name / 工程項目名稱</label>
+                <select id="project-name" onchange="updateHeaderBadge(this.value)" class="w-full p-2.5 border border-slate-300 rounded-lg bg-slate-50 text-sm font-medium focus:ring-2 focus:ring-[#007640] focus:outline-none">
+                    <option value="">-- Select Project / 選擇項目 --</option>
+                    <option value="(952) NE/2017/03">(952) NE/2017/03</option>
+                    <option value="(969) Hiu Ming Street">(969) Hiu Ming Street</option>
+                    <option value="(992) DC/2018/07">(992) DC/2018/07</option>
+                    <option value="(997) ND/2019/02">(997) ND/2019/02</option>
+                    <option value="(1007) 1/WSD/19">(1007) 1/WSD/19</option>
+                    <option value="(1010) ND/2019/04">(1010) ND/2019/04</option>
+                    <option value="(1027) DC/2020/02">(1027) DC/2020/02</option>
+                    <option value="(1045) 3/WSD/21">(1045) 3/WSD/21</option>
+                    <option value="(1046) 6/WSD/21">(1046) 6/WSD/21</option>
+                    <option value="(1054) 3/WSD/24">(1054) 3/WSD/24</option>
+                    <option value="(1057) 18/WSD/21">(1057) 18/WSD/21</option>
+                    <option value="(1068) SS L515">(1068) SS L515</option>
+                    <option value="(1069) DC/2022/01">(1069) DC/2022/01</option>
+                    <option value="(1073) DC/2022/05">(1073) DC/2022/05</option>
+                    <option value="(1076) 21/WSD/21">(1076) 21/WSD/21</option>
+                    <option value="(1077) Penfold Park">(1077) Penfold Park</option>
+                    <option value="(1078) TC LM012">(1078) TC LM012</option>
+                    <option value="(1079) TC LM021">(1079) TC LM021</option>
+                    <option value="(1081) SS L513">(1081) SS L513</option>
+                    <option value="(1086) IS/2022/02">(1086) IS/2022/02</option>
+                    <option value="(1089) KWH Phase 2">(1089) KWH Phase 2</option>
+                    <option value="(1090) DC/2023/08">(1090) DC/2023/08</option>
+                    <option value="(1105) CV/2023/03">(1105) CV/2023/03</option>
+                    <option value="(1113) YL/2023/02">(1113) YL/2023/02</option>
+                    <option value="(1119) HKGGA">(1119) HKGGA</option>
+                    <option value="(1120) DC/2024/04">(1120) DC/2024/04</option>
+                    <option value="(1126) T24M101">(1126) T24M101</option>
+                    <option value="(1129) HA-TMC-O44">(1129) HA-TMC-O44</option>
+                    <option value="(1130) DC/2023/11">(1130) DC/2023/11</option>
+                    <option value="(1131) ND/2024/04">(1131) ND/2024/04</option>
+                    <option value="(1138) TC N952">(1138) TC N952</option>
+                    <option value="(1139) TC N921">(1139) TC N921</option>
+                    <option value="(1146) SS P506">(1146) SS P506</option>
+                    <option value="(1152) TC P928">(1152) TC P928</option>
+                    <option value="(1157) UPS">(1157) UPS</option>
+                    <option value="(1164) TC PM021">(1164) TC PM021</option>
+                    <option value="(1165) TC PM031">(1165) TC PM031</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Date & Time / 檢查日期及時間</label>
+                <input type="text" id="checking-datetime" readonly class="w-full p-2.5 border border-slate-200 rounded-lg bg-slate-100 text-sm font-medium text-slate-500 cursor-not-allowed">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Name of Checker / 檢查員姓名</label>
+                <input type="text" id="checker-name" placeholder="e.g. Chan Tai Man" class="w-full p-2.5 border border-slate-300 rounded-lg bg-slate-50 text-sm font-medium focus:ring-2 focus:ring-[#007640] focus:outline-none">
+            </div>
+        </section>
+
+        <section class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 border-b pb-1 mb-3">2. Workforce Scale / 地盤總人數</h2>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Select Active On-site Headcount / 選擇現場工人總數</label>
+            <select id="workforce-tier" onchange="applyWorkforceTierLogic(this.value)" class="w-full p-3 border-2 border-slate-300 rounded-lg bg-slate-50 text-sm font-bold text-slate-700 focus:border-[#007640] focus:ring-2 focus:ring-[#007640] focus:outline-none">
+                <option value="">-- Choose Headcount Range / 選擇人數波段 --</option>
+                <option value="tier1">Fewer than 10 workers / 少於 10 人</option>
+                <option value="tier2">10 to 49 workers / 10 至 49 人</option>
+                <option value="tier3">50 to 100 workers / 50 至 100 人</option>
+                <option value="tier4">More than 100 workers / 多於 100 人</option>
+            </select>
+            <div id="tier-hint" class="mt-2 text-[11px] text-slate-500 italic hidden"></div>
+        </section>
+
+        <section class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 border-b pb-1">3. Container Specifications / 外箱與安全告示</h2>
+            
+            <div class="pb-2 border-b border-dashed border-slate-100">
+                <label class="block text-xs font-semibold text-slate-600 mb-1">First Aid Box ID No. / 急救箱編號</label>
+                <input type="text" id="box-id-no" placeholder="e.g. FA-BOX-01" class="w-full p-2 border border-slate-300 rounded-lg bg-slate-50 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#007640]">
+            </div>
+
+            <div class="flex items-center justify-between space-x-2">
+                <div class="flex-1">
+                    <label class="block text-xs font-medium text-slate-700">Container clearly marked "FIRST AID" & "急救"？</label>
+                </div>
+                <div class="flex items-center space-x-1.5">
+                    <select id="meta-label" onchange="validateRowStatus(this, 'OK')" class="p-1.5 border border-slate-300 rounded-lg bg-slate-50 text-xs w-24">
+                        <option value="">-- 請選擇 --</option>
+                        <option value="OK">Yes / 是</option>
+                        <option value="FAIL">No / 否</option>
+                    </select>
+                    <span id="status-meta-label" class="text-base font-bold w-5 text-center text-red-500">❌</span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between space-x-2 pt-1">
+                <div class="flex-1">
+                    <label class="block text-xs font-medium text-slate-700">Notice of designated certified first-aiders affixed outside？</label>
+                </div>
+                <div class="flex items-center space-x-1.5">
+                    <select id="meta-notice" onchange="validateRowStatus(this, 'OK')" class="p-1.5 border border-slate-300 rounded-lg bg-slate-50 text-xs w-24">
+                        <option value="">-- 請選擇 --</option>
+                        <option value="OK">Yes / 是</option>
+                        <option value="FAIL">No / 否</option>
+                    </select>
+                    <span id="status-meta-notice" class="text-base font-bold w-5 text-center text-red-500">❌</span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between space-x-2 pt-1">
+                <div class="flex-1">
+                    <label class="block text-xs font-medium text-slate-700">Is container dust/waterproof sealed? / 箱體密閉防塵防水？</label>
+                </div>
+                <div class="flex items-center space-x-1.5">
+                    <select id="meta-seal" onchange="validateRowStatus(this, 'OK')" class="p-1.5 border border-slate-300 rounded-lg bg-slate-50 text-xs w-24">
+                        <option value="">-- 請選擇 --</option>
+                        <option value="OK">Yes / 是</option>
+                        <option value="FAIL">No / 否</option>
+                    </select>
+                    <span id="status-meta-seal" class="text-base font-bold w-5 text-center text-red-500">❌</span>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-dashed border-slate-100">
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Upload Inspection Photo / 上傳巡查照片 Evidence</label>
+                <input type="file" id="inspection-photo" accept="image/*" capture="camera" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+            </div>
+        </section>
+
+        <section id="checklist-card" class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-4 hidden">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 border-b pb-1">4. Interactive Inventory Check / 內含物核對</h2>
+
+            <div class="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-800 font-medium">
+                <strong class="block text-red-700 mb-0.5">⚠️ STRICT LEGAL PROHIBITION / 嚴格法規禁令:</strong>
+                急救箱內嚴禁存放任何口服藥物、藥水或止痛藥丸。
+            </div>
+
+            <div class="overflow-x-auto border border-slate-200 rounded-lg shadow-inner">
+                <table class="w-full table-auto text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-600 uppercase text-[10px] tracking-wider border-b border-slate-200">
+                            <th class="p-2 w-1/2">Content / 物品名稱</th>
+                            <th class="p-2 text-center whitespace-nowrap">Required<br>所需</th>
+                            <th class="p-2 text-center whitespace-nowrap">Checked<br>實檢 / 狀態</th>
+                        </tr>
+                    </thead>
+                    <tbody id="checklist-table-body" class="divide-y divide-slate-100">
+                        </tbody>
+                </table>
+            </div>
+
+            <button type="button" onclick="evaluateComplianceReport()" class="w-full bg-[#007640] hover:bg-green-800 text-white font-bold p-3 rounded-xl text-sm transition-all shadow-md focus:outline-none">
+                Verify & Submit Report / 提交報告
+            </button>
+        </section>
+    </main>
+
+    <script>
+        const statutorySchema = [
+            { id: "booklet", en: "A copy of 'Hints on First Aid' booklet (HintsOnFirstAid.pdf)", zh: "《急救指南》小冊子 (HintsOnFirstAid.pdf)", unit: "pc", t1: 1, t2: 1, t3: 1, t4: 1 },
+            { id: "small_dressing", en: "Sterile unmedicated dressing, Small size", zh: "消毒不含藥敷料，細碼（手指用）", unit: "pcs", t1: 12, t2: 12, t3: 12, t4: 12 },
+            { id: "medium_dressing", en: "Sterile unmedicated dressing, Medium size", zh: "消毒不含藥敷料，中碼（手腳用）", unit: "pcs", t1: 6, t2: 6, t3: 6, t4: 6 },
+            { id: "large_dressing", en: "Sterile unmedicated dressing, Large size", zh: "消毒不含藥敷料，大碼（身體用）", unit: "pcs", t1: 6, t2: 6, t3: 6, t4: 6 },
+            { id: "waterproof_dressings", en: "Waterproof adhesive wound dressings", zh: "各大小尺碼不同的防水傷口敷料（防水膠布）", unit: "pcs", t1: 24, t2: 24, t3: 24, t4: 24 },
+            { id: "triangular", en: "Triangular bandages of unbleached calico", zh: "原色棉布三角繃帶（最長邊≥1.3米）", unit: "pcs", t1: 4, t2: 4, t3: 4, t4: 4 },
+            { id: "adhesive_plaster", en: "Roll of adhesive plaster (Zinc oxide)", zh: "黏貼膠布（氧化鋅，至少4.5米 x 25毫米）", unit: "roll", t1: 1, t2: 1, t3: 1, t4: 1 },
+            { id: "cotton_wool", en: "Packets of absorbent cotton wool (30g)", zh: "30克包裝的吸水脫脂棉", unit: "pkts", t1: 6, t2: 6, t3: 6, t4: 6 },
+            { id: "pressure_bandage", en: "Pressure bandage", zh: "壓力繃帶", unit: "pc", t1: 1, t2: 1, t3: 1, t4: 1 },
+            { id: "safety_pins", en: "Safety pins", zh: "安全扣針", unit: "pcs", t1: 6, t2: 6, t3: 6, t4: 6 },
+            { id: "eye_bath", en: "Eye bath (Sufficient supply)", zh: "洗眼杯（50人或以上地盤法規要求必備）", unit: "pcs", t1: 0, t2: 0, t3: 1, t4: 1 }
+        ];
+
+        let currentShortcodeDate = "";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const now = new Date();
+            const formatTime = now.getFullYear() + '-' + 
+                               String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                               String(now.getDate()).padStart(2, '0') + ' ' + 
+                               String(now.getHours()).padStart(2, '0') + ':' + 
+                               String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('checking-datetime').value = formatTime;
+            
+            // For file name shortcode format e.g. 20260622
+            currentShortcodeDate = now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0');
+
+            const cachedName = localStorage.getItem("hk_firstaid_checker");
+            if (cachedName) document.getElementById('checker-name').value = cachedName;
+        });
+
+        function updateHeaderBadge(val) {
+            const badge = document.getElementById('header-project-badge');
+            if (val) {
+                badge.textContent = val;
+                badge.className = "bg-amber-500 text-neutral-900 text-[10px] px-2 py-1 rounded font-extrabold uppercase tracking-wide max-w-[140px] truncate block";
+            } else {
+                badge.textContent = "Select Project";
+                badge.className = "bg-slate-400 text-white text-[10px] px-2 py-1 rounded font-extrabold uppercase tracking-wide block";
+            }
+        }
+
+        function validateRowStatus(elem, targetVal) {
+            const indicator = document.getElementById('status-' + elem.id);
+            if (elem.value === targetVal) {
+                indicator.textContent = "✔️";
+                indicator.className = "text-base font-bold w-5 text-center text-green-500";
+            } else {
+                indicator.textContent = "❌";
+                indicator.className = "text-base font-bold w-5 text-center text-red-500";
+            }
+        }
+
+        function triggerLiveCheck(inputElem, requiredMin) {
+            const itemId = inputElem.getAttribute('data-id');
+            const indicator = document.getElementById('status-' + itemId);
+            const userVal = parseInt(inputElem.value) || 0;
+
+            if (userVal >= requiredMin) {
+                indicator.textContent = "✔️";
+                indicator.className = "text-base font-bold text-green-500 pl-1";
+                inputElem.className = "inventory-input w-14 p-1 text-center border-2 border-green-500 rounded-md bg-white font-bold text-sm focus:outline-none";
+            } else {
+                indicator.textContent = "❌";
+                indicator.className = "text-base font-bold text-red-500 pl-1";
+                inputElem.className = "inventory-input w-14 p-1 text-center border-2 border-red-400 rounded-md bg-red-50 font-bold text-sm focus:outline-none";
+            }
+        }
+
+        function applyWorkforceTierLogic(tierKey) {
+            const container = document.getElementById('checklist-card');
+            const tbody = document.getElementById('checklist-table-body');
+            const hintBox = document.getElementById('tier-hint');
+            
+            if (!tierKey) {
+                container.classList.add('hidden');
+                hintBox.classList.add('hidden');
+                return;
+            }
+
+            container.classList.remove('hidden');
+            hintBox.classList.remove('hidden');
+            tbody.innerHTML = "";
+
+            if (tierKey === "tier4") {
+                hintBox.innerHTML = "ℹ️ <strong>Rule Requirement:</strong> 1 full box per 50 workers. Stretcher must be deployed alongside the box.<br>比例規定：每50名工人設1個急救箱，且旁側必須常備擔架床。";
+                hintBox.className = "mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-[11px] text-amber-800 font-medium block";
+            } else if (tierKey === "tier3") {
+                hintBox.innerHTML = "ℹ️ <strong>Stretcher Rule Mandate:</strong> 1 standard stretcher must be provided at the site alongside the box.<br>比例規定：50人或以上地盤必須設置一副符合標準的擔架床放置在急救箱旁邊。";
+                hintBox.className = "mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-[11px] text-blue-800 font-medium block";
+            } else {
+                hintBox.innerHTML = "ℹ️ Standard legal contents loaded. Stretcher not compulsory under 50 workers.<br>已加載少於50人工人波段標準。";
+                hintBox.className = "mt-2 text-[11px] text-slate-500 italic block";
+            }
+
+            statutorySchema.forEach(item => {
+                let requiredQty = item[tierKey === "tier1" ? "t1" : tierKey === "tier2" ? "t2" : tierKey === "tier3" ? "t3" : "t4"];
+                if (requiredQty === 0) return;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors";
+                tr.innerHTML = `
+                    <td class="p-2 border-b border-slate-100">
+                        <div class="font-semibold text-slate-900 text-[11px]">${item.en}</div>
+                        <div class="text-slate-500 text-[11px] mt-0.5">${item.zh}</div>
+                    </td>
+                    <td class="p-2 text-center font-bold text-[#007640] border-b border-slate-100 text-xs whitespace-nowrap">
+                        <span id="req-${item.id}">${requiredQty}</span> <span class="text-[10px] font-normal text-slate-400">${item.unit}</span>
+                    </td>
+                    <td class="p-2 border-b border-slate-100 text-center whitespace-nowrap">
+                        <div class="flex items-center justify-center space-x-1">
+                            <input type="number" id="check-${item.id}" min="0" placeholder="0" 
+                                   data-id="${item.id}" data-desc="${item.en}"
+                                   oninput="triggerLiveCheck(this, ${requiredQty})"
+                                   class="inventory-input w-14 p-1 text-center border-2 border-red-400 rounded-md bg-red-50 font-bold text-sm focus:outline-none">
+                            <span id="status-${item.id}" class="text-base font-bold text-red-500 w-4 text-center">❌</span>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // CSV Downloader Generator Engine
+        function downloadCSVReport(projectName, checkingTime, checkerName, boxId) {
+            let csvContent = "\uFEFF"; // UTF-8 BOM for Excel Chinese characters alignment
+            csvContent += "First Aid Box Compliance Report / 急救箱合規檢查報告\n";
+            csvContent += `Project Name / 工程項目,${projectName.replace(/,/g, ' ')}\n`;
+            csvContent += `Date & Time / 檢查時間,${checkingTime}\n`;
+            csvContent += `Checker Name / 檢查員,${checkerName}\n`;
+            csvContent += `First Aid Box ID No. / 急救箱編號,${boxId}\n\n`;
+            csvContent += "Item / 物品名稱,Required Qty / 法定所需,Checked Qty / 實檢數量,Status / 狀態\n";
+
+            const inputs = document.querySelectorAll('.inventory-input');
+            inputs.forEach(input => {
+                const itemId = input.getAttribute('data-id');
+                const itemDesc = input.getAttribute('data-desc');
+                const checkedVal = input.value || 0;
+                const requiredVal = document.getElementById(`req-${itemId}`).textContent;
+                csvContent += `"${itemDesc}",${requiredVal},${checkedVal},PASSED / 合規\n`;
+            });
+
+            // Clean filename e.g. (952) NE_2017_03_20260622_FA-BOX-01.csv
+            const safeProject = projectName.replace(/[\/\\*?:"<>|]/g, '_');
+            const safeBoxId = boxId.replace(/[\/\\*?:"<>|]/g, '_');
+            const fileName = `${safeProject}_${currentShortcodeDate}_${safeBoxId}.csv`;
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", fileName);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        function evaluateComplianceReport() {
+            const project = document.getElementById('project-name').value;
+            const checker = document.getElementById('checker-name').value;
+            const tier = document.getElementById('workforce-tier').value;
+            const boxId = document.getElementById('box-id-no').value.trim();
+            const datetime = document.getElementById('checking-datetime').value;
+
+            if (!project || !checker || !tier || !boxId) {
+                alert("❌ Missing Configurations!\n請填妥工程項目、檢查員、人數波段及急救箱編號！");
+                return;
+            }
+
+            localStorage.setItem("hk_firstaid_checker", checker);
+
+            const metaLabelIcon = document.getElementById('status-meta-label').textContent;
+            const metaNoticeIcon = document.getElementById('status-meta-notice').textContent;
+            const metaSealIcon = document.getElementById('status-meta-seal').textContent;
+
+            if (metaLabelIcon === "❌" || metaNoticeIcon === "❌" || metaSealIcon === "❌") {
+                alert("❌ 請先修正外箱外觀或告示的不合規項目才可提交！");
+                return;
+            }
+
+            let blockSubmission = false;
+            const inputs = document.querySelectorAll('.inventory-input');
+            inputs.forEach(input => {
+                const itemId = input.getAttribute('data-id');
+                if (document.getElementById('status-' + itemId).textContent === "❌") {
+                    blockSubmission = true;
+                }
+            });
+
+            if (blockSubmission) {
+                alert("❌ 內含物數量不足！請補齊所有物資並獲得全綠色剔號才可提交。");
+            } else {
+                // Auto trigger CSV download on success
+                downloadCSVReport(project, datetime, checker, boxId);
+                alert(`✅ 提交成功並已自動下載報告！\n\n檔案已存為 CSV。您可以直接在手機的「檔案/Downloads」中找到它，並透過 WhatsApp 或 Email 傳送給辦公室。`);
+            }
+        }
+    </script>
+
+    <script>
+        const SW_CODE = `
+            const CACHE_NAME = 'fa-checklist-cache-v1';
+            const ASSETS = [ './', './index.html', './company_logo.png' ];
+            self.addEventListener('install', e => {
+                e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+            });
+            self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+            self.addEventListener('fetch', e => {
+                e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
+            });
+        `;
+        if ('serviceWorker' in navigator) {
+            const blob = new Blob([SW_CODE], {type: 'application/javascript'});
+            navigator.serviceWorker.register(URL.createObjectURL(blob))
+                .then(() => console.log('PWA Service Worker Activated Successfully.'))
+                .catch(err => console.log('SW registration failed: ', err));
+        }
+    </script>
+</body>
+</html>
