@@ -9,7 +9,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
         
-        /* 🖨️ 打印及另存 PDF 專用樣式優化 */
+        /* 🖨️ 打印及另存 PDF 專用跨平台樣式優化 */
         @media print {
             body {
                 background: #ffffff !important;
@@ -17,11 +17,9 @@
                 padding: 0 !important;
                 margin: 0 !important;
             }
-            /* 隱藏非打印按鈕 */
-            [data-html2canvas-ignore="true"], .no-print {
+            .no-print {
                 display: none !important;
             }
-            /* 去除外殼陰影與邊框，完美適配 A4 寬度 */
             #checklist-container {
                 border: none !important;
                 box-shadow: none !important;
@@ -29,7 +27,6 @@
                 max-width: 100% !important;
                 width: 100% !important;
             }
-            /* 修正下拉選單與文字欄位在打印時的樣式，保留邊框防止留白 */
             select, input[type="datetime-local"], input[type="text"] {
                 appearance: none !important;
                 -webkit-appearance: none !important;
@@ -38,7 +35,6 @@
                 background: transparent !important;
                 background-image: none !important;
             }
-            /* 強制防斷頁 */
             .page-break-avoid {
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
@@ -46,23 +42,23 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen p-4 sm:p-8">
+<body class="bg-gray-100 text-gray-900 min-h-screen p-4 sm:p-6">
 
-    <div id="checklist-container" class="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-6 sm:p-10 border border-gray-200">
+    <div id="checklist-container" class="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-200">
         
-        <div class="flex flex-col items-center text-center border-b-2 border-gray-200 pb-6 mb-6 page-break-avoid">
-            <img src="company_logo.png" alt="Company Logo" class="h-20 w-auto object-contain mb-4 block" onerror="this.style.display='none';">
-            <h1 class="text-3xl font-extrabold text-gray-950 tracking-wide">急救箱每週檢查表</h1>
-            <p class="text-sm font-semibold text-gray-500 mt-1.5 uppercase tracking-wider">First Aid Box Weekly Checklist</p>
+        <div class="flex flex-col items-center text-center border-b-2 border-gray-200 pb-5 mb-5 page-break-avoid">
+            <img src="company_logo.png" alt="Company Logo" class="h-16 w-auto object-contain mb-3 block" onerror="this.style.display='none';">
+            <h1 class="text-2xl font-extrabold text-gray-950 tracking-wide">急救箱每週檢查表</h1>
+            <p class="text-xs font-semibold text-gray-500 mt-1 uppercase tracking-wider">First Aid Box Weekly Checklist</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8 page-break-avoid">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 page-break-avoid">
             <div class="md:col-span-2">
-                <label class="block text-sm font-bold text-gray-800 uppercase tracking-wide mb-2">
+                <label class="block text-xs font-bold text-gray-800 uppercase tracking-wide mb-1.5">
                     Project Select / 選擇地盤項目
                 </label>
                 <select id="project-select" required
-                        class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-base text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
+                        class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-sm text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
                     <option value="" disabled selected>-- Please Select a Project / 請選擇項目 --</option>
                     <option value="(952) NE/2017/03">(952) NE/2017/03</option>
                     <option value="(969) Hiu Ming Street">(969) Hiu Ming Street</option>
@@ -81,4 +77,246 @@
                     <option value="(1076) 21/WSD/21">(1076) 21/WSD/21</option>
                     <option value="(1077) Penfold Park">(1077) Penfold Park</option>
                     <option value="(1078) TC LM012">(1078) TC LM012</option>
-                    <option value
+                    <option value="(1079) TC LM021">(1079) TC LM021</option>
+                    <option value="(1081) SS L513">(1081) SS L513</option>
+                    <option value="(1086) IS/2022/02">(1086) IS/2022/02</option>
+                    <option value="(1089) KWH Phase 2">(1089) KWH Phase 2</option>
+                    <option value="(1090) DC/2023/08">(1090) DC/2023/08</option>
+                    <option value="(1105) CV/2023/03">(1105) CV/2023/03</option>
+                    <option value="(1113) YL/2023/02">(1113) YL/2023/02</option>
+                    <option value="(1119) HKGGA">(1119) HKGGA</option>
+                    <option value="(1120) DC/2024/04">(1120) DC/2024/04</option>
+                    <option value="(1126) T24M101">(1126) T24M101</option>
+                    <option value="(1129) HA-TMC-O44">(1129) HA-TMC-O44</option>
+                    <option value="(1130) DC/2023/11">(1130) DC/2023/11</option>
+                    <option value="(1131) ND/2024/04">(1131) ND/2024/04</option>
+                    <option value="(1138) TC N952">(1138) TC N952</option>
+                    <option value="(1139) TC N921">(1139) TC N921</option>
+                    <option value="(1146) SS P506">(1146) SS P506</option>
+                    <option value="(1152) TC P928">(1152) TC P928</option>
+                    <option value="(1157) UPS">(1157) UPS</option>
+                    <option value="(1164) TC PM021">(1164) TC PM021</option>
+                    <option value="(1165) TC PM031">(1165) TC PM031</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-800 uppercase tracking-wide mb-1.5">
+                    Workforce Size / 地盤工人總數 (Cap. 59I)
+                </label>
+                <select id="workforce-select" onchange="updateQuantities()" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-sm text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
+                    <option value="under50">Fewer than 50 workers / 少於 50 人</option>
+                    <option value="over50" selected>50 or more workers / 50 人或以上</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-800 uppercase tracking-wide mb-1.5">
+                    Inspection Date & Time / 檢查日期及時間
+                </label>
+                <input type="datetime-local" id="inspection-date" required
+                       class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-sm text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-xs font-bold text-gray-800 uppercase tracking-wide mb-1.5">
+                    Inspected By (Name) / 檢查員姓名
+                </label>
+                <input type="text" id="inspector-name" placeholder="Enter inspector's name / 請輸入姓名" required
+                       class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-sm text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
+            </div>
+        </div>
+
+        <div id="stretcher-warning" class="bg-amber-50 border-2 border-amber-300 rounded-xl p-3.5 mb-6 page-break-avoid hidden">
+            <div class="flex items-start space-x-2.5">
+                <span class="text-amber-600 text-xl">⚠️</span>
+                <div>
+                    <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wide">Cap. 59I MANDATORY ALERT (50+ Workers)</h4>
+                    <p class="text-[11px] text-gray-800 mt-0.5 leading-relaxed font-medium">
+                        The contractor must cause a <strong class="text-amber-950 font-bold">Stretcher</strong> to be provided at the site and ensure it is kept alongside this first aid box.
+                    </p>
+                    <p class="text-[11px] text-amber-900 font-bold mt-0.5">
+                        法例警告：50人或以上地盤，承建商必須在急救箱旁邊額外設置一副「擔架床」。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-2 border-gray-200 rounded-xl overflow-hidden bg-white mb-6 shadow-sm">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-100 border-b-2 border-gray-200">
+                        <th class="p-3 text-xs font-bold text-gray-800 uppercase tracking-wide">Statutory Items / 法定必備項目</th>
+                        <th class="p-3 text-xs font-bold text-center text-gray-800 w-32 uppercase tracking-wide">Required / 法定數量</th>
+                        <th class="p-3 text-xs font-bold text-center text-gray-800 w-16 uppercase tracking-wide">Check</th>
+                    </tr>
+                </thead>
+                <tbody id="items-table-body" class="divide-y divide-gray-200">
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="border-2 border-gray-200 rounded-xl p-4 bg-gray-50 mb-6 page-break-avoid">
+            <h3 class="text-xs font-bold text-gray-800 tracking-wide mb-3 uppercase flex items-center gap-2">
+                <span>📸</span> Photo Record / 現場拍照紀錄
+            </h3>
+            
+            <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="processAndCompressPhoto(event)">
+            
+            <div class="flex flex-col items-center justify-center">
+                <button type="button" onclick="document.getElementById('camera-input').click()" class="no-print bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-5 rounded-xl transition mb-3 flex items-center space-x-2 shadow-md">
+                    <span>📷</span>
+                    <span>Take Photo / 啟動相機拍照</span>
+                </button>
+
+                <div id="photo-preview-container" class="hidden w-full max-w-xs border-2 border-gray-300 rounded-xl overflow-hidden bg-white relative mt-1 shadow-lg">
+                    <img id="photo-preview" src="#" alt="First Aid Box Condition" class="w-full h-auto object-cover max-h-64">
+                    <button type="button" onclick="removePhoto()" class="no-print absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow">
+                        REMOVE / 刪除
+                    </button>
+                </div>
+                <p id="photo-placeholder-text" class="text-xs text-gray-400 italic mt-1 font-medium">No photo attached. Take a photo before exporting.</p>
+                <p id="compression-status" class="text-[11px] text-emerald-600 font-bold mt-1.5 hidden">✓ Photo compressed (~150KB) for easy sharing! / 相片已自動高壓縮優化！</p>
+            </div>
+        </div>
+
+        <div class="mt-6 flex gap-4 no-print">
+            <button onclick="exportToPDF()" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3 px-4 rounded-xl transition duration-200 shadow-md flex items-center justify-center space-x-2">
+                <span>📁</span>
+                <span>Export PDF / 匯出報告</span>
+            </button>
+            <button onclick="resetForm()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center space-x-2">
+                <span>🔄</span>
+                <span>Reset / 重設表單</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const checklistItems = [
+            { id: 'booklet', en: '"Hints on First Aid" Booklet', zh: '「急急指南」小冊子 (正本/副本)', qtyUnder50: '1 pc', qtyOver50: '1 pc' },
+            { id: 'dress_s', en: 'Sterile Dressings (Small)', zh: '消毒不含藥敷料：細碼 (手指用)', qtyUnder50: '12 pcs', qtyOver50: '12 pcs' },
+            { id: 'dress_m', en: 'Sterile Dressings (Medium)', zh: '消毒不含藥敷料：中碼 (手腳用)', qtyUnder50: '6 pcs', qtyOver50: '6 pcs' },
+            { id: 'dress_l', en: 'Sterile Dressings (Large)', zh: '消毒不含藥敷料：大碼 (身體用)', qtyUnder50: '6 pcs', qtyOver50: '6 pcs' },
+            { id: 'waterproof_ad', en: 'Waterproof Adhesive Dressings', zh: '防水黏性傷口敷料 (各大小尺碼)', qtyUnder50: '24 pcs', qtyOver50: '24 pcs' },
+            { id: 'triangular', en: 'Triangular Bandages', zh: '原色棉布三角繃帶 (最長邊≥1.3米)', qtyUnder50: '4 pcs', qtyOver50: '4 pcs' },
+            { id: 'plaster', en: 'Rolls of Adhesive Plaster', zh: '黏貼膠布 (氧化鋅) (≥4.5m x 25mm)', qtyUnder50: '1 roll', qtyOver50: '1 roll' },
+            { id: 'cotton', en: 'Absorbent Cotton Wool (30g)', zh: '吸水脫脂棉 (30克包裝)', qtyUnder50: '6 pkts', qtyOver50: '6 pkts' },
+            { id: 'pressure_b', en: 'Pressure Bandage', zh: '壓力繃帶', qtyUnder50: '1 pc', qtyOver50: '1 pc' },
+            { id: 'pins', en: 'Safety Pins', zh: '安全扣針', qtyUnder50: '6 pcs', qtyOver50: '6 pcs' },
+            { id: 'eyebath', en: 'Eye Bath', zh: '洗眼杯', qtyUnder50: 'Sufficient', qtyOver50: 'Sufficient' },
+            { id: 'label_marking', en: 'Box Label ("FIRST AID" / "急救")', zh: '外殼清楚標明「急救」及 "FIRST AID"', qtyUnder50: 'Required', qtyOver50: 'Required' },
+            { id: 'aider_notice', en: 'Notice of First-Aider Name List', zh: '貼有指定負責合格急救員姓名告示', qtyUnder50: 'Required', qtyOver50: 'Required' }
+        ];
+
+        function setDefaultDateTime() {
+            const now = new Date();
+            const offset = now.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+            document.getElementById('inspection-date').value = localISOTime;
+        }
+
+        function renderTable(tier) {
+            const tbody = document.getElementById('items-table-body');
+            tbody.innerHTML = '';
+
+            checklistItems.forEach(item => {
+                const targetQty = tier === 'under50' ? item.qtyUnder50 : item.qtyOver50;
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 transition page-break-avoid';
+                tr.innerHTML = `
+                    <td class="p-3">
+                        <div class="text-xs font-bold text-gray-950">${item.en}</div>
+                        <div class="text-[11px] font-semibold text-gray-500 mt-0.5">${item.zh}</div>
+                    </td>
+                    <td class="p-3 text-center text-xs font-mono font-extrabold text-blue-700 bg-gray-50/50">
+                        ${targetQty}
+                    </td>
+                    <td class="p-3 text-center">
+                        <input type="checkbox" checked class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer">
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const warningBox = document.getElementById('stretcher-warning');
+            if (tier === 'over50') {
+                warningBox.classList.remove('hidden');
+            } else {
+                warningBox.classList.add('hidden');
+            }
+        }
+
+        // 📸 Canvas 圖像高比例智慧壓縮引擎（將大圖降至 150KB 左右）
+        function processAndCompressPhoto(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        const MAX_WIDTH = 800; 
+                        if (width > MAX_WIDTH) {
+                            height = Math.round((height * MAX_WIDTH) / width);
+                            width = MAX_WIDTH;
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // 轉為 JPEG 格式並實施 70% 壓縮率
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                        
+                        document.getElementById('photo-preview').src = compressedDataUrl;
+                        document.getElementById('photo-preview-container').classList.remove('hidden');
+                        document.getElementById('photo-placeholder-text').classList.add('hidden');
+                        document.getElementById('compression-status').classList.remove('hidden');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removePhoto() {
+            document.getElementById('camera-input').value = "";
+            document.getElementById('photo-preview').src = "#";
+            document.getElementById('photo-preview-container').classList.add('hidden');
+            document.getElementById('photo-placeholder-text').classList.remove('hidden');
+            document.getElementById('compression-status').classList.add('hidden');
+        }
+
+        function updateQuantities() {
+            const tier = document.getElementById('workforce-select').value;
+            renderTable(tier);
+        }
+
+        function resetForm() {
+            document.getElementById('project-select').selectedIndex = 0;
+            document.getElementById('workforce-select').value = 'over50';
+            document.getElementById('inspector-name').value = '';
+            setDefaultDateTime();
+            removePhoto();
+            renderTable('over50');
+        }
+
+        function exportToPDF() {
+            window.print();
+        }
+
+        window.onload = () => { 
+            renderTable('over50'); 
+            setDefaultDateTime();
+        };
+    </script>
+</body>
+</html>
