@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>急救箱每週檢查表 | First Aid Box Weekly Checklist</title>
+    <!-- 使用穩定版 Tailwind CSS 確保跨平台相容性 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -27,7 +28,7 @@
                 max-width: 100% !important;
                 width: 100% !important;
             }
-            select, input[type="datetime-local"], input[type="text"] {
+            select, input[type="datetime-local"], input[type="text"], input[type="number"] {
                 appearance: none !important;
                 -webkit-appearance: none !important;
                 -moz-appearance: none !important;
@@ -35,7 +36,6 @@
                 background: transparent !important;
                 background-image: none !important;
             }
-            /* 針對唯讀和禁用狀態在打印時優化 */
             input:read-only {
                 background: transparent !important;
                 border: 1px solid #cccccc !important;
@@ -50,14 +50,17 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen p-4 sm:p-6">
 
+    <!-- 主表單外殼 -->
     <div id="checklist-container" class="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-200">
         
+        <!-- 1. 公司標誌與標題區 -->
         <div class="flex flex-col items-center text-center border-b-2 border-gray-200 pb-5 mb-5 page-break-avoid">
             <img src="company_logo.png" alt="Company Logo" class="h-16 w-auto object-contain mb-3 block" onerror="this.style.display='none';">
             <h1 class="text-2xl font-extrabold text-gray-950 tracking-wide">急救箱每週檢查表</h1>
             <p class="text-xs font-semibold text-gray-500 mt-1 uppercase tracking-wider">First Aid Box Weekly Checklist</p>
         </div>
 
+        <!-- 2. 基本資料填寫區 -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 page-break-avoid">
             <div class="md:col-span-2">
                 <label class="block text-xs font-bold text-gray-800 uppercase tracking-wide mb-1.5">
@@ -141,61 +144,76 @@
             </div>
         </div>
 
+        <!-- 3. 擔架床法規高亮警告 -->
         <div id="stretcher-warning" class="bg-amber-50 border-2 border-amber-300 rounded-xl p-3.5 mb-6 page-break-avoid hidden">
             <div class="flex items-start space-x-2.5">
                 <span class="text-amber-600 text-xl">⚠️</span>
                 <div>
                     <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wide">Cap. 59I MANDATORY ALERT (50+ Workers)</h4>
                     <p class="text-[11px] text-gray-800 mt-0.5 leading-relaxed font-medium">
-                        The contractor must cause a <strong class="text-amber-950 font-bold">Stretcher</strong> to be provided at the site and ensure it is kept alongside this first aid box.
+                        The contractor must cause a <strong class="text-amber-950 font-bold">Stretcher</strong> to be provided at the site and ensure it is kept alongside this first aid box.[cite: 1]
                     </p>
                     <p class="text-[11px] text-amber-900 font-bold mt-0.5">
-                        法例警告：50人或以上地盤，承建商必須在急救箱旁邊額外設置一副「擔架床」。
+                        法例警告：50人或以上地盤，承建商必須在急救箱旁邊額外設置一副「擔架床」。[cite: 1]
                     </p>
                 </div>
             </div>
         </div>
 
-        <div class="border-2 border-gray-200 rounded-xl overflow-hidden bg-white mb-6 shadow-sm">
+        <!-- 4. 升級版：法定必備項目 4 欄表格結構 -->
+        <div class="border-2 border-gray-200 rounded-xl overflow-hidden bg-white mb-4 shadow-sm">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-gray-100 border-b-2 border-gray-200">
-                        <th class="p-3 text-xs font-bold text-gray-800 uppercase tracking-wide">Statutory Items / 法定必備項目</th>
-                        <th class="p-3 text-xs font-bold text-center text-gray-800 w-32 uppercase tracking-wide">Required / 法定數量</th>
-                        <th class="p-3 text-xs font-bold text-center text-gray-800 w-16 uppercase tracking-wide">Check</th>
+                        <th class="p-2.5 text-xs font-bold text-gray-800 uppercase tracking-wide">Statutory Items / 法定必備項目</th>
+                        <th class="p-2.5 text-xs font-bold text-center text-gray-800 w-24 uppercase tracking-wide">Required<br>法定</th>
+                        <th class="p-2.5 text-xs font-bold text-center text-gray-800 w-28 uppercase tracking-wide">Checked<br>實檢</th>
+                        <th class="p-2.5 text-xs font-bold text-center text-gray-800 w-16 uppercase tracking-wide">Result<br>結果</th>
                     </tr>
                 </thead>
                 <tbody id="items-table-body" class="divide-y divide-gray-200">
-                    </tbody>
+                    <!-- 由 JavaScript 動態精確渲染 -->
+                </tbody>
             </table>
         </div>
 
+        <!-- 阻擋機制：非合規警告橫幅 -->
+        <div id="compliance-blocker-msg" class="bg-red-50 border border-red-300 rounded-xl p-3 mb-6 flex items-center space-x-2 hidden page-break-avoid">
+            <span class="text-red-600 font-bold text-sm">❌</span>
+            <p class="text-xs font-bold text-red-800">
+                Cannot export: Some items do not meet the minimum statutory quantity under Cap. 59I! / 無法匯出：部分項目未達到法規要求數量！
+            </p>
+        </div>
+
+        <!-- 5. 📸 升級版：現場拍照功能紀錄區 (支援最多 3 張 + 智慧 JPEG 高壓縮) -->
         <div class="border-2 border-gray-200 rounded-xl p-4 bg-gray-50 mb-6 page-break-avoid">
-            <h3 class="text-xs font-bold text-gray-800 tracking-wide mb-3 uppercase flex items-center gap-2">
-                <span>📸</span> Photo Record / 現場拍照紀錄
-            </h3>
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-xs font-bold text-gray-800 tracking-wide uppercase flex items-center gap-2">
+                    <span>📸</span> Photo Records / 現場拍照紀錄 (Max 3)
+                </h3>
+                <span id="photo-count-badge" class="text-[11px] font-bold bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">0 / 3</span>
+            </div>
             
             <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="processAndCompressPhoto(event)">
             
             <div class="flex flex-col items-center justify-center">
-                <button type="button" onclick="document.getElementById('camera-input').click()" class="no-print bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-5 rounded-xl transition mb-3 flex items-center space-x-2 shadow-md">
+                <button type="button" id="take-photo-btn" onclick="document.getElementById('camera-input').click()" class="no-print bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 px-4 rounded-xl transition flex items-center space-x-2 shadow-md mb-4">
                     <span>📷</span>
-                    <span>Take Photo / 啟動相機拍照</span>
+                    <span>Add Photo / 新增相片</span>
                 </button>
 
-                <div id="photo-preview-container" class="hidden w-full max-w-xs border-2 border-gray-300 rounded-xl overflow-hidden bg-white relative mt-1 shadow-lg">
-                    <img id="photo-preview" src="#" alt="First Aid Box Condition" class="w-full h-auto object-cover max-h-64">
-                    <button type="button" onclick="removePhoto()" class="no-print absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow">
-                        REMOVE / 刪除
-                    </button>
+                <!-- 3張相片並排/網格容器 -->
+                <div id="photos-grid-container" class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
+                    <!-- 由 JS 動態注入建立 -->
                 </div>
-                <p id="photo-placeholder-text" class="text-xs text-gray-400 italic mt-1 font-medium">No photo attached. Take a photo before exporting.</p>
-                <p id="compression-status" class="text-[11px] text-emerald-600 font-bold mt-1.5 hidden">✓ Photo compressed (~150KB) for easy sharing! / 相片已自動高壓縮優化！</p>
+                
+                <p id="photo-placeholder-text" class="text-xs text-gray-400 italic mt-2 font-medium">No photos attached. Take up to 3 photos for conditions verification.</p>
             </div>
         </div>
 
+        <!-- 6. 行動控制按鈕 -->
         <div class="mt-6 flex gap-4 no-print">
-            <button onclick="exportToPDF()" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3 px-4 rounded-xl transition duration-200 shadow-md flex items-center justify-center space-x-2">
+            <button id="export-pdf-btn" onclick="exportToPDF()" class="w-1/2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-bold text-sm py-3 px-4 rounded-xl transition duration-200 shadow-md flex items-center justify-center space-x-2">
                 <span>📁</span>
                 <span>Export PDF / 匯出報告</span>
             </button>
@@ -206,22 +224,27 @@
         </div>
     </div>
 
+    <!-- 驅動核心 JavaScript -->
     <script>
+        // 嚴格依據 Cap. 59I 封裝的數據對象，區分數字型項目與狀態選擇型項目
         const checklistItems = [
-            { id: 'booklet', en: '"Hints on First Aid" Booklet', zh: '「急救指南」小冊子 (正本/副本)', qtyUnder50: '1 pc', qtyOver50: '1 pc' },
-            { id: 'dress_s', en: 'Sterile Dressings (Small)', zh: '消毒不含藥敷料：細碼 (手指用)', qtyUnder50: '12 pcs', qtyOver50: '12 pcs' },
-            { id: 'dress_m', en: 'Sterile Dressings (Medium)', zh: '消毒不含藥敷料：中碼 (手腳用)', qtyUnder50: '6 pcs', qtyOver50: '6 pcs' },
-            { id: 'dress_l', en: 'Sterile Dressings (Large)', zh: '消毒不含藥敷料：大碼 (身體用)', qtyUnder50: '6 pcs', qtyOver50: '6 pcs' },
-            { id: 'waterproof_ad', en: 'Waterproof Adhesive Dressings', zh: '防水黏性傷口敷料 (各大小尺碼)', qtyUnder50: '24 pcs', qtyOver50: '24 pcs' },
-            { id: 'triangular', en: 'Triangular Bandages', zh: '原色棉布三角繃帶 (最長邊≥1.3米)', qtyUnder50: '4 pcs', qtyOver50: '4 pcs' },
-            { id: 'plaster', en: 'Rolls of Adhesive Plaster', zh: '黏貼膠布 (氧化鋅) (≥4.5m x 25mm)', qtyUnder50: '1 roll', qtyOver50: '1 roll' },
-            { id: 'cotton', en: 'Absorbent Cotton Wool (30g)', zh: '吸水脫脂棉 (30克包裝)', qtyUnder50: '6 pkts', qtyOver50: '6 pkts' },
-            { id: 'pressure_b', en: 'Pressure Bandage', zh: '壓力繃帶', qtyUnder50: '1 pc', qtyOver50: '1 pc' },
-            { id: 'pins', en: 'Safety Pins', zh: '安全扣針', qtyUnder50: '6 pcs', qtyOver50: '6 pcs' },
-            { id: 'eyebath', en: 'Eye Bath', zh: '洗眼杯', qtyUnder50: 'Sufficient', qtyOver50: 'Sufficient' },
-            { id: 'label_marking', en: 'Box Label ("FIRST AID" / "急救")', zh: '外殼清楚標明「急救」及 "FIRST AID"', qtyUnder50: 'Required', qtyOver50: 'Required' },
-            { id: 'aider_notice', en: 'Notice of First-Aider Name List', zh: '貼有指定負責合格急救員姓名告示', qtyUnder50: 'Required', qtyOver50: 'Required' }
+            { id: 'booklet', en: '"Hints on First Aid" Booklet', zh: '「急救指南」小冊子 (正本/副本)', type: 'select', under50: 1, over50: 1, label: 'pc' },
+            { id: 'dress_s', en: 'Sterile Dressings (Small)', zh: '消毒不含藥敷料：細碼 (手指用)', type: 'number', under50: 12, over50: 12, label: 'pcs' },
+            { id: 'dress_m', en: 'Sterile Dressings (Medium)', zh: '消毒不含藥敷料：中碼 (手腳用)', type: 'number', under50: 6, over50: 6, label: 'pcs' },
+            { id: 'dress_l', en: 'Sterile Dressings (Large)', zh: '消毒不含藥敷料：大碼 (身體用)', type: 'number', under50: 6, over50: 6, label: 'pcs' },
+            { id: 'waterproof_ad', en: 'Waterproof Adhesive Dressings', zh: '防水黏性傷口敷料 (各大小尺碼)', type: 'number', under50: 24, over50: 24, label: 'pcs' },
+            { id: 'triangular', en: 'Triangular Bandages', zh: '原色棉布三角繃帶 (最長邊≥1.3米)', type: 'number', under50: 4, over50: 4, label: 'pcs' },
+            { id: 'plaster', en: 'Rolls of Adhesive Plaster', zh: '黏貼膠布 (氧化鋅) (≥4.5m x 25mm)', type: 'number', under50: 1, over50: 1, label: 'roll' },
+            { id: 'cotton', en: 'Absorbent Cotton Wool (30g)', zh: '吸水脫脂棉 (30克包裝)', type: 'number', under50: 6, over50: 6, label: 'pkts' },
+            { id: 'pressure_b', en: 'Pressure Bandage', zh: '壓力繃帶', type: 'number', under50: 1, over50: 1, label: 'pc' },
+            { id: 'pins', en: 'Safety Pins', zh: '安全扣針', type: 'number', under50: 6, over50: 6, label: 'pcs' },
+            { id: 'eyebath', en: 'Eye Bath', zh: '洗眼杯', type: 'select', under50: 1, over50: 1, label: 'Sufficient' },
+            { id: 'label_marking', en: 'Box Label ("FIRST AID" / "急救")', zh: '外殼清楚標明「急救」及 "FIRST AID"', type: 'select', under50: 1, over50: 1, label: 'Required' },
+            { id: 'aider_notice', en: 'Notice of First-Aider Name List', zh: '貼有指定負責合格急救員姓名告示', type: 'select', under50: 1, over50: 1, label: 'Required' }
         ];
+
+        // 圖片存儲數組 (最多 3 張)
+        let uploadedPhotos = [];
 
         function setDefaultDateTime() {
             const now = new Date();
@@ -230,40 +253,119 @@
             document.getElementById('inspection-date').value = localISOTime;
         }
 
-        function renderTable(tier) {
+        function renderTable() {
+            const tier = document.getElementById('workforce-select').value;
             const tbody = document.getElementById('items-table-body');
             tbody.innerHTML = '';
 
             checklistItems.forEach(item => {
-                const targetQty = tier === 'under50' ? item.qtyUnder50 : item.qtyOver50;
+                const reqQtyValue = tier === 'under50' ? item.under50 : item.over50;
+                let reqQtyDisplay = `${reqQtyValue} ${item.label}`;
+                
+                if (item.label === 'Sufficient') reqQtyDisplay = 'Sufficient / 足量';
+                if (item.label === 'Required') reqQtyDisplay = 'Required / 必須';
+
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-gray-50 transition page-break-avoid';
-                tr.innerHTML = `
-                    <td class="p-3">
+                
+                // 1. 項目資訊欄位
+                let htmlContent = `
+                    <td class="p-2.5">
                         <div class="text-xs font-bold text-gray-950">${item.en}</div>
                         <div class="text-[11px] font-semibold text-gray-500 mt-0.5">${item.zh}</div>
                     </td>
-                    <td class="p-3 text-center text-xs font-mono font-extrabold text-blue-700 bg-gray-50/50">
-                        ${targetQty}
-                    </td>
-                    <td class="p-3 text-center">
-                        <input type="checkbox" checked class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer">
+                    <td class="p-2.5 text-center text-xs font-mono font-extrabold text-blue-700 bg-gray-50/50">
+                        ${reqQtyDisplay}
                     </td>
                 `;
+
+                // 2. 實檢數量輸入欄位 (數字 vs 下拉選單)
+                if (item.type === 'number') {
+                    htmlContent += `
+                        <td class="p-2.5 text-center">
+                            <input type="number" id="check-${item.id}" value="${reqQtyValue}" min="0" oninput="validateCompliance()"
+                                   class="w-20 font-mono text-center font-bold text-xs bg-gray-50 border border-gray-300 rounded-lg py-1 px-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </td>
+                    `;
+                } else {
+                    htmlContent += `
+                        <td class="p-2.5 text-center">
+                            <select id="check-${item.id}" onchange="validateCompliance()"
+                                    class="w-24 text-center font-bold text-xs bg-gray-50 border border-gray-300 rounded-lg py-1 px-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="1" selected>Yes / 是</option>
+                                <option value="0">No / 否</option>
+                            </select>
+                        </td>
+                    `;
+                }
+
+                // 3. 結果欄位佔位
+                htmlContent += `
+                    <td class="p-2.5 text-center text-sm font-bold" id="res-${item.id}">
+                        <span class="text-emerald-600">✓</span>
+                    </td>
+                `;
+
+                tr.innerHTML = htmlContent;
                 tbody.appendChild(tr);
             });
 
+            // 處理擔架床高亮邏輯
             const warningBox = document.getElementById('stretcher-warning');
             if (tier === 'over50') {
                 warningBox.classList.remove('hidden');
             } else {
                 warningBox.classList.add('hidden');
             }
+
+            validateCompliance();
         }
 
-        // 📸 Canvas 圖像高比例智慧壓縮引擎（將大圖降至 150KB 左右）
+        // 核心驗證與阻擋邏輯：即時核對數據，若有不合規項目直接鎖死 Export 按鈕
+        function validateCompliance() {
+            const tier = document.getElementById('workforce-select').value;
+            let allCompliant = true;
+
+            checklistItems.forEach(item => {
+                const reqQty = tier === 'under50' ? item.under50 : item.over50;
+                const inputElement = document.getElementById(`check-${item.id}`);
+                const resultElement = document.getElementById(`res-${item.id}`);
+                
+                if (!inputElement || !resultElement) return;
+
+                const checkedValue = parseInt(inputElement.value, 10) || 0;
+                
+                // 只要實檢小於法定需求，即判定不合規
+                if (checkedValue >= reqQty) {
+                    resultElement.innerHTML = `<span class="text-emerald-600 font-extrabold" title="Compliant">✓</span>`;
+                } else {
+                    resultElement.innerHTML = `<span class="text-red-600 font-extrabold" title="Non-Compliant">✗</span>`;
+                    allCompliant = false;
+                }
+            });
+
+            // 控制 UI 阻擋警告與 Export 按鈕啟用狀態
+            const exportBtn = document.getElementById('export-pdf-btn');
+            const BlockerMsg = document.getElementById('compliance-blocker-msg');
+            
+            if (allCompliant) {
+                exportBtn.removeAttribute('disabled');
+                BlockerMsg.classList.add('hidden');
+            } else {
+                exportBtn.setAttribute('disabled', 'true');
+                BlockerMsg.classList.remove('hidden');
+            }
+        }
+
+        // 📸 升級版：多圖 Canvas 智慧高比例壓縮引擎
         function processAndCompressPhoto(event) {
             const input = event.target;
+            if (uploadedPhotos.length >= 3) {
+                alert("Maximum 3 photos allowed. / 最多只能上傳 3 張相片。");
+                input.value = "";
+                return;
+            }
+
             if (input.files && input.files[0]) {
                 const file = input.files[0];
                 const reader = new FileReader();
@@ -287,13 +389,12 @@
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
                         
-                        // 轉為 JPEG 格式並實施 70% 壓縮率
+                        // 轉為高壓縮 JPEG（70% 質量，兼顧清晰度與約 150KB 體積）
                         const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
                         
-                        document.getElementById('photo-preview').src = compressedDataUrl;
-                        document.getElementById('photo-preview-container').classList.remove('hidden');
-                        document.getElementById('photo-placeholder-text').classList.add('hidden');
-                        document.getElementById('compression-status').classList.remove('hidden');
+                        uploadedPhotos.push(compressedDataUrl);
+                        renderPhotoThumbnails();
+                        input.value = ""; // 清空以允許重複觸發同一檔案
                     };
                     img.src = e.target.result;
                 };
@@ -301,17 +402,54 @@
             }
         }
 
-        function removePhoto() {
-            document.getElementById('camera-input').value = "";
-            document.getElementById('photo-preview').src = "#";
-            document.getElementById('photo-preview-container').classList.add('hidden');
-            document.getElementById('photo-placeholder-text').classList.remove('hidden');
-            document.getElementById('compression-status').classList.add('hidden');
+        // 渲染多圖預覽網格
+        function renderPhotoThumbnails() {
+            const gridContainer = document.getElementById('photos-grid-container');
+            const placeholder = document.getElementById('photo-placeholder-text');
+            const badge = document.getElementById('photo-count-badge');
+            const takePhotoBtn = document.getElementById('take-photo-btn');
+
+            gridContainer.innerHTML = '';
+            badge.innerText = `${uploadedPhotos.length} / 3`;
+
+            if (uploadedPhotos.length === 0) {
+                placeholder.classList.remove('hidden');
+            } else {
+                placeholder.classList.add('hidden');
+            }
+
+            // 控制拍照按鈕上限置灰
+            if (uploadedPhotos.length >= 3) {
+                takePhotoBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                takePhotoBtn.setAttribute('disabled', 'true');
+            } else {
+                takePhotoBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                takePhotoBtn.removeAttribute('disabled');
+            }
+
+            uploadedPhotos.forEach((photoDataUrl, index) => {
+                const div = document.createElement('div');
+                div.className = 'border border-gray-300 rounded-xl overflow-hidden bg-white relative shadow shadow-md';
+                div.innerHTML = `
+                    <img src="${photoDataUrl}" alt="Checklist Photo ${index + 1}" class="w-full h-40 object-cover">
+                    <div class="bg-gray-900/60 p-1 text-center text-[10px] text-white font-bold font-mono">
+                        Photo ${index + 1} (~150KB Optimized)
+                    </div>
+                    <button type="button" onclick="removePhoto(${index})" class="no-print absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
+                        REMOVE
+                    </button>
+                `;
+                gridContainer.appendChild(div);
+            });
+        }
+
+        function removePhoto(index) {
+            uploadedPhotos.splice(index, 1);
+            renderPhotoThumbnails();
         }
 
         function updateQuantities() {
-            const tier = document.getElementById('workforce-select').value;
-            renderTable(tier);
+            renderTable();
         }
 
         function resetForm() {
@@ -319,9 +457,10 @@
             document.getElementById('box-id-no').value = '';
             document.getElementById('workforce-select').value = 'over50';
             document.getElementById('inspector-name').value = '';
+            uploadedPhotos = [];
             setDefaultDateTime();
-            removePhoto();
-            renderTable('over50');
+            renderPhotoThumbnails();
+            renderTable();
         }
 
         function exportToPDF() {
@@ -329,7 +468,7 @@
         }
 
         window.onload = () => { 
-            renderTable('over50'); 
+            renderTable(); 
             setDefaultDateTime();
         };
     </script>
