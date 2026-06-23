@@ -165,11 +165,11 @@
         <div class="border border-gray-300 rounded-xl overflow-hidden bg-white mb-4 shadow-sm">
             <table class="w-full border-collapse table-fixed">
                 <thead>
-                    <tr class="bg-gray-100 border-b border-gray-300 text-[11px] sm:text-xs font-bold text-gray-800">
-                        <th class="p-2 text-left w-[50%] sm:w-[55%]">Statutory Items / 法定項目</th>
-                        <th class="p-1 text-center w-[18%] sm:w-[15%]">Req.<br>法定</th>
-                        <th class="p-1 text-center w-[20%] sm:w-[18%]">Check<br>實檢</th>
-                        <th class="p-1 text-center w-[12%] sm:w-[12%]">Res<br>結果</th>
+                    <tr class="bg-gray-100 border-b border-gray-300 text-[10px] sm:text-xs font-bold text-gray-800">
+                        <th class="p-2 text-left w-[42%] sm:w-[48%]">Statutory Items<br>法定項目</th>
+                        <th class="p-1 text-center w-[20%] sm:w-[17%]">Required<br>法定數量</th>
+                        <th class="p-1 text-center w-[21%] sm:w-[20%]">Checked<br>實檢數量</th>
+                        <th class="p-1 text-center w-[17%] sm:w-[15%]">Result<br>結果</th>
                     </tr>
                 </thead>
                 <tbody id="items-table-body" class="divide-y divide-gray-200">
@@ -208,13 +208,19 @@
         </div>
 
         <div class="mt-5 flex gap-3 no-print">
-            <button id="export-pdf-btn" onclick="exportToPDF()" class="w-1/2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl transition duration-200 shadow flex items-center justify-center space-x-1.5">
-                <span>📁</span>
-                <span>Export PDF / 匯出報告</span>
+            <button id="export-pdf-btn" onclick="exportToPDF()" class="w-1/2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-bold py-2 px-3 rounded-xl transition duration-200 shadow flex flex-col items-center justify-center">
+                <div class="flex items-center space-x-1">
+                    <span>📁</span>
+                    <span class="text-xs sm:text-sm">Export PDF</span>
+                </div>
+                <div class="text-[10px] sm:text-xs font-normal opacity-90 mt-0.5">匯出報告</div>
             </button>
-            <button onclick="resetForm()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl transition duration-200 flex items-center justify-center space-x-1.5">
-                <span>🔄</span>
-                <span>Reset / 重設表單</span>
+            <button onclick="resetForm()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-3 rounded-xl transition duration-200 flex flex-col items-center justify-center">
+                <div class="flex items-center space-x-1">
+                    <span>🔄</span>
+                    <span class="text-xs sm:text-sm">Reset Form</span>
+                </div>
+                <div class="text-[10px] sm:text-xs font-normal opacity-80 mt-0.5">重設表單</div>
             </button>
         </div>
     </div>
@@ -260,7 +266,6 @@
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-gray-50 transition page-break-avoid text-[11px] sm:text-xs text-gray-900';
                 
-                // 1. 項目名稱欄（精簡文字長度以完美適配小螢幕）
                 let htmlContent = `
                     <td class="p-1.5 font-medium leading-tight break-words">
                         <div class="font-bold text-gray-950">${item.en}</div>
@@ -271,7 +276,6 @@
                     </td>
                 `;
 
-                // 2. 實檢數量欄（限制手機端輸入框寬度，不撐開表格）
                 if (item.type === 'number') {
                     htmlContent += `
                         <td class="p-1 text-center">
@@ -291,7 +295,6 @@
                     `;
                 }
 
-                // 3. 結果顯示欄
                 htmlContent += `
                     <td class="p-1 text-center text-xs font-bold" id="res-${item.id}">
                         <span class="text-emerald-600">✓</span>
